@@ -1,7 +1,7 @@
 package haxe.htmlparser;
 
-import haquery.Serializer;
-import haquery.Unserializer;
+import haxe.Serializer;
+import haxe.Unserializer;
 
 class HtmlNodeElement extends HtmlNode
 {

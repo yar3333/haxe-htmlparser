@@ -203,9 +203,9 @@ class HtmlParser
         return attributes;
     }
     
-    static public function parseCssSelector(selector : String) : Array<Array<CssSelector>>
+    public static function parseCssSelector(selector : String) : Array<Array<CssSelector>>
     {
-		var reg : EReg = new EReg('\\s*,\\s*', "");
+		var reg = new EReg('\\s*,\\s*', "");
         var selectors = reg.split(selector);
         var r = [];
         for (s in selectors)
