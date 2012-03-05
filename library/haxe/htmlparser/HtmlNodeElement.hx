@@ -68,21 +68,20 @@ class HtmlNodeElement extends HtmlNode
 
     public override function toString() 
     {
-        var sAttrs = Lambda.array(Lambda.map(attributes, function(a) return a.toString())).join(' ');
-		
-        if (sAttrs != '')
-		{
-			sAttrs = ' ' + sAttrs;
-		}
+        var sAttrs = Lambda.fold(attributes, function(a, s) return s + " " + a.toString(), "");
         
-        if (this.nodes.length == 0 && (Reflect.hasField(HtmlParser.selfClosingTags, name) || name.indexOf(':') >= 0))
+        if (nodes.length == 0 && (Reflect.hasField(HtmlParser.selfClosingTags, name) || name.indexOf(':') >= 0))
 		{
-			return "<" + name+sAttrs + " />";
+			return "<" + name + sAttrs + " />";
 		}
 		
-        var sChildren = Lambda.array(Lambda.map(nodes, function(a) return a.toString())).join('');
+		var sChildren = "";
+		for (node in nodes)
+		{
+			sChildren += node.toString();
+		}
 		
-        return name!=null && name!='' 
+        return name != null && name != ''
             ? "<" + name + sAttrs + ">" + sChildren + "</" + name + ">"
             : sChildren;
     }
