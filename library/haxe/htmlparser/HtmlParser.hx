@@ -235,13 +235,23 @@ class HtmlParser
 			{
 				var subreg : EReg = new EReg(reSubSelector, "is");
 				var substr = reg.matched(2);
-				while(subreg.match(substr))
+				try
 				{
-					var s = subreg.matched(0);
-					if      (s.substr(0, 1) == "#") ids.push(s.substr(1));
-					else if (s.substr(0, 1) == ".") classes.push(s.substr(1));
-					else                            tags.push((s.toLowerCase()));
-					substr = subreg.matchedRight();
+					while(subreg.match(substr))
+					{
+						var s = subreg.matched(0);
+						if      (s.substr(0, 1) == "#") ids.push(s.substr(1));
+						else if (s.substr(0, 1) == ".") classes.push(s.substr(1));
+						else                            tags.push((s.toLowerCase()));
+						substr = subreg.matchedRight();
+					}
+				}
+				catch (e:Dynamic)
+				{
+					#if neko
+					neko.Lib.println(substr);
+					#end
+					throw e;
 				}
 			}
 			parsedSelectors.push({ 
