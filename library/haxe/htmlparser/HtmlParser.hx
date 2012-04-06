@@ -28,24 +28,19 @@ class HtmlParser
     {
         var reID = regExpForID;
         var reAttr = regExpForID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" ;
-
         var reElementName = reID + "(?::" + reID + ")?";
-		
-		var reScript = "[<]\\s*script\\s*(?<scriptAttrs2>[^>]*)>(?<scriptText3>.*?)<\\s*/\\s*script\\s*>";
-		var reStyle = "<\\s*style\\s*(?<styleAttrs5>[^>]*)>(?<styleText6>.*?)<\\s*/\\s*style\\s*>";
-		var reElementOpen = "<\\s*(?<tagOpen8>" + reElementName+ ")";
+		var reScript = "[<]\\s*script\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*script\\s*>";
+		var reStyle = "<\\s*style\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*style\\s*>";
+		var reElementOpen = "<\\s*(" + reElementName+ ")";
         var reAttr = reID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)";
-        var reElementEnd = "(?<tagEnd10>/)?\\s*>";
-        var reElementClose = "<\\s*/\\s*(?<tagClose12>" + reElementName + ")\\s*>";
-        
-        
-        var reComment = "<!--.*?-->";
-
-        var re = new EReg(
-				 "(?<script1>" + reScript + ")|(?<style4>" + reStyle + ")|(?<elem7>" + reElementOpen 
-		       + "(?<attrs9>(?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(?<close11>" + reElementClose + ")|(?<comment13>" + reComment + ")", "is"
-		);
+        var reElementEnd = "(/)?\\s*>";
+        var reElementClose = "<\\s*/\\s*(" + reElementName + ")\\s*>";
+        var reComment = "<!--[\\s\\S]*?-->";
 		
+        var reStr = "(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen 
+		          + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")";
+		
+		var re = new EReg(reStr, "i");
 		var matches = new Array<HtmlLexem>();
 		var parsedStr : String = str;
 		var cutted = 0;
@@ -181,7 +176,7 @@ class HtmlParser
     {
         var attributes = new Hash<HtmlAttribute>();
 
-		var re = new EReg("(?<name>" + regExpForID + ")\\s*=\\s*(?<value>'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "is");
+		var re = new EReg("(" + regExpForID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
 		var parsedStr = str;
         while (parsedStr != null && parsedStr != '' && re.match(parsedStr))
         {
@@ -223,7 +218,7 @@ class HtmlParser
         var reSubSelector = '[.#]?' + regExpForID + '(?::' + regExpForID + ')?';
         
         var parsedSelectors = [];
-		var reg : EReg = new EReg("(?<type>[ >])(?<selector>(?:" + reSubSelector + ")+|[*])", "is");
+		var reg = new EReg("([ >])((?:" + reSubSelector + ")+|[*])", "i");
 		
 		var strSelector = ' ' + selector;
         while (reg.match(strSelector))
