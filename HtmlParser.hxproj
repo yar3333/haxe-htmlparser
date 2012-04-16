@@ -36,7 +36,8 @@
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
-    <!-- example: <hidden path="..." /> -->
+    <hidden path="bin" />
+    <hidden path="library.zip" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />
