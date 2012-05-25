@@ -13,7 +13,7 @@ class HtmlNodeElement extends HtmlNode
     public function getPrevSiblingElement() : HtmlNodeElement
     {
         if (parent == null) return null;
-        var n = Lambda.indexOf(parent.children, this);
+        var n = indexOf(parent.children, this);
         if (n < 0) return null;
         if (n > 0) return parent.children[n - 1];
         return null;
@@ -22,7 +22,7 @@ class HtmlNodeElement extends HtmlNode
     public function getNextSiblingElement() : HtmlNodeElement
     {
         if (parent == null) return null;
-        var n = Lambda.indexOf(parent.children, this);
+        var n = indexOf(parent.children, this);
         if (n < 0) return null;
         if (n + 1 < parent.children.length) return parent.children[n + 1];
         return null;
@@ -50,13 +50,13 @@ class HtmlNodeElement extends HtmlNode
         }
         else
         {
-            var n = Lambda.indexOf(nodes, beforeNode);
+            var n = indexOf(nodes, beforeNode);
             if (n >= 0)
             {
                 nodes.insert(n, node);
                 if (Type.getClass(node) == HtmlNodeElement)
                 {
-                    n = Lambda.indexOf(children, cast(beforeNode, HtmlNodeElement));
+                    n = indexOf(children, beforeNode);
                     if (n >= 0)
                     {
                         children.insert(n, cast(node, HtmlNodeElement));
@@ -267,13 +267,13 @@ class HtmlNodeElement extends HtmlNode
 	
 	public function removeChild(node:HtmlNode)
     {
-        var n = Lambda.indexOf(nodes, node);
+        var n = indexOf(nodes, node);
         if (n >= 0) 
         {
             nodes.splice(n, 1);
 			if (Type.getClass(node) == HtmlNodeElement)
 			{
-				n = Lambda.indexOf(children, cast(node, HtmlNodeElement));
+				n = indexOf(children, node);
 				if (n >= 0 )
 				{
 					children.splice(n, 1);
@@ -281,7 +281,7 @@ class HtmlNodeElement extends HtmlNode
 			}
         }
     }
-    
+	
     public function getAttributesAssoc() : Hash<String>
     {
         var attrs = new Hash<String>();
@@ -319,4 +319,13 @@ class HtmlNodeElement extends HtmlNode
 			addChild(n);
 		}
     }
+	
+	static function indexOf(array:Array<Dynamic>, item:Dynamic) : Int
+	{
+		for (i in 0...array.length)
+		{
+			if (array[i] == item) return i;
+		}
+		return -1;
+	}
 }

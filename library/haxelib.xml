@@ -2,5 +2,5 @@
     <user name='yar3333'/>
     <tag v='cross'/>
     <description>HaXe crossplatform port of the PHP Simple HTML DOM Parser.</description>
-    <version name='1.2'>JavaScript support fixes.</version>
+    <version name='1.3'>Lambda.indexOf() fixes.</version>
 </project>
