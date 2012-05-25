@@ -142,7 +142,7 @@ class HtmlNodeElement extends HtmlNode
                 var nodesToAdd = node.findInner(s);
                 for (nodeToAdd in nodesToAdd)
                 {
-                    if (!Lambda.has(resNodes, nodeToAdd))
+                    if (indexOf(resNodes, nodeToAdd) < 0)
                     {
                         resNodes.push(nodeToAdd);
                     }
