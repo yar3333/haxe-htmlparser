@@ -2,7 +2,7 @@ package;
 
 import haxe.Serializer;
 import haxe.Unserializer;
-import php.io.File;
+import sys.io.File;
 import haxe.htmlparser.HtmlParser;
 import haxe.htmlparser.HtmlNodeElement;
 import haxe.htmlparser.HtmlNodeText;
@@ -86,9 +86,9 @@ class HtmlTest extends haxe.unit.TestCase
     
     public function testComplexParse()
     {
-		var s = php.io.File.getContent('support/input.html');
-		php.io.File.putContent("support/output.html", getParsedAsString(s));
-		assertEquals(s, php.io.File.getContent('support/output.html'));
+		var s = File.getContent('support/input.html');
+		File.saveContent("support/output.html", getParsedAsString(s));
+		assertEquals(s, File.getContent('support/output.html'));
     }
     
     public function testSelectors()
