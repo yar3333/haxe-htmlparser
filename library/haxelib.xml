@@ -2,5 +2,5 @@
     <user name='yar3333'/>
     <tag v='cross'/>
     <description>HaXe crossplatform port of the PHP Simple HTML DOM Parser.</description>
-    <version name='1.5'>&lt;source&gt; tag added to self-closing.</version>
+    <version name='1.6'>Some bugfixes.</version>
 </project>

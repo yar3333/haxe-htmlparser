@@ -6,7 +6,7 @@ import haxe.Unserializer;
 class HtmlNodeElement extends HtmlNode
 {
     public var name : String;
-    private var attributes : Hash<HtmlAttribute>;
+    private var attributes : Array<HtmlAttribute>;
     public var nodes : Array<HtmlNode>;
     public var children : Array<HtmlNodeElement>;
     
@@ -28,7 +28,7 @@ class HtmlNodeElement extends HtmlNode
         return null;
     }
     
-	public function new(name:String, attributes:Hash<HtmlAttribute>)
+	public function new(name:String, attributes:Array<HtmlAttribute>)
     {
         this.name = name;
         this.attributes = attributes;
@@ -36,7 +36,7 @@ class HtmlNodeElement extends HtmlNode
         this.children = [];
     }
 
-    public function addChild(node:HtmlNode, beforeNode=null) : Void
+    public function addChild(node:HtmlNode, beforeNode:HtmlNode=null) : Void
     {
         node.parent = this;
         
@@ -88,40 +88,67 @@ class HtmlNodeElement extends HtmlNode
 
 	public function getAttribute(name:String) : String
 	{
-		var a = attributes.get(name.toLowerCase());
-		return a != null ? a.value : null;
+		var nameLC = name.toLowerCase();
+		
+		for (a in attributes)
+		{
+			if (a.name.toLowerCase() == nameLC) return a.value;
+		}
+		
+		return null;
 	}
 
     public function setAttribute(name:String, value:String)
     {
-        if (hasAttribute(name))
-        {
-			attributes.get(name.toLowerCase()).value = value;
-        }
-        else
-        {
-            attributes.set(name.toLowerCase(), new HtmlAttribute(name, value, '"'));
-        }
+		var nameLC = name.toLowerCase();
+		
+		for (a in attributes)
+		{
+			if (a.name.toLowerCase() == nameLC)
+			{
+				a.value = value;
+				return;
+			}
+		}
+        
+        attributes.push(new HtmlAttribute(name, value, '"'));
     }
 
     public function removeAttribute(name:String)
     {
-		attributes.remove(name);
+		var nameLC = name.toLowerCase();
+		
+		for (i in 0...attributes.length)
+		{
+			var a = attributes[i];
+			if (a.name.toLowerCase() == nameLC)
+			{
+				attributes.splice(i, 1);
+				return;
+			}
+		}
     }
 
     public function hasAttribute(name:String) : Bool
     {
-        return attributes.exists(name.toLowerCase());
+		var nameLC = name.toLowerCase();
+		
+		for (a in attributes)
+		{
+			if (a.name.toLowerCase() == nameLC) return true;
+		}
+		
+		return false;
     }
     
     public var innerHTML(innerHTML_getter, innerHTML_setter) : String;
 	
 	function innerHTML_setter(value:String) : String
 	{
-		nodes = HtmlParser.parse(value);
-		this.nodes = [];
-		this.children = [];
-		for (node in nodes) this.addChild(node);
+		var newNodes = HtmlParser.parse(value);
+		nodes = [];
+		children = [];
+		for (node in newNodes) addChild(node);
 		return value;
 	}
 	
@@ -197,7 +224,8 @@ class HtmlNodeElement extends HtmlNode
         for (clas in selector.classes) 
 		{
 			var reg = new EReg("(?:^|\\s)" + clas + "(?:$|\\s)", "");
-            if (!reg.match(getAttribute('class'))) return false;
+            var classAttr = getAttribute("class");
+			if (classAttr == null || !reg.match(classAttr)) return false;
 		}
         return true;
     }
@@ -294,9 +322,9 @@ class HtmlNodeElement extends HtmlNode
 
     public function setInnerText(text) : Void
     {
-        this.nodes = [];
-        this.children = [];
-        this.addChild(new HtmlNodeText(text));
+        nodes = [];
+        children = [];
+        addChild(new HtmlNodeText(text));
     }
 	
 	override function hxSerialize(s:Serializer)
