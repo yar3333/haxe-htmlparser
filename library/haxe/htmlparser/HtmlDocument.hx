@@ -4,7 +4,7 @@ class HtmlDocument extends HtmlNodeElement
 {
     public function new(str="") : Void
     {
-        super("", new Hash());
+        super("", []);
         var nodes = HtmlParser.parse(str);
         for (node in nodes)
 		{

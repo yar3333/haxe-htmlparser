@@ -231,11 +231,26 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals("bed<con>e</con>", xml.innerHTML);
 		assertEquals(1, xml.children.length);
 	}
+	
+	public function testRemove()
+	{
+		var xml = new HtmlDocument("<a></a><b></b><c></c>");
+		assertEquals(3, xml.children.length);
+		assertEquals(3, xml.nodes.length);
+		
+		var nodes = xml.find(">a>b");
+		assertTrue(nodes != null);
+		assertTrue(nodes.length == 1);
+		nodes[0].remove();
+		
+		assertEquals(2, xml.children.length);
+		assertEquals(2, xml.nodes.length);
+	}
     
 	public function testSpeed()
     {
         var str = File.getContent('support/input.html');
-        var loops = 10;
+        var loops = 1000;
         
         var start = Date.now();
 		for (i in 0...loops)

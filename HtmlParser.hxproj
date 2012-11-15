@@ -4,13 +4,13 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="bin" />
+    <movie path="bin\index.n" />
     <movie fps="0" />
     <movie width="0" />
     <movie height="0" />
     <movie version="1" />
     <movie minorVersion="0" />
-    <movie platform="PHP" />
+    <movie platform="Neko" />
     <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -45,7 +45,7 @@
   <postBuildCommand alwaysRun="False">xcopy tests\support bin\support /I /Y</postBuildCommand>
   <!-- Other project options -->
   <options>
-    <option showHiddenPaths="False" />
+    <option showHiddenPaths="True" />
     <option testMovie="OpenDocument" />
     <option testMovieCommand="http://htmlparser/" />
   </options>

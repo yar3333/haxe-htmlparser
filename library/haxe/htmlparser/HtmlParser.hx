@@ -172,9 +172,9 @@ class HtmlParser
         return elem;
     }
 
-    private static function parseAttrs(str:String) : Hash<HtmlAttribute>
+    private static function parseAttrs(str:String) : Array<HtmlAttribute>
     {
-        var attributes = new Hash<HtmlAttribute>();
+        var attributes = new Array<HtmlAttribute>();
 
 		var re = new EReg("(" + regExpForID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
 		var parsedStr = str;
@@ -191,7 +191,7 @@ class HtmlParser
 			{
 				quote = '';
 			}
-			attributes.set(name.toLowerCase(), new HtmlAttribute(name, value, quote));
+			attributes.push(new HtmlAttribute(name, value, quote));
 			parsedStr = re.matchedRight();
         }
 
