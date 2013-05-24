@@ -1,6 +1,6 @@
 <project name='HtmlParser' url='https://code.google.com/p/haxe-htmlparser' license='LGPL'>
     <user name='yar3333'/>
     <tag v='cross'/>
-    <description>HaXe crossplatform port of the PHP Simple HTML DOM Parser.</description>
-    <version name='1.6'>Some bugfixes.</version>
+    <description>Haxe crossplatform port of the PHP Simple HTML DOM Parser.</description>
+    <version name='1.7'>Minor bugfix for JS platform.</version>
 </project>

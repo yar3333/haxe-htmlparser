@@ -12,20 +12,20 @@ class Main
 {
     static function main()
 	{
-		#if (php || neko)
+		#if sys
 		Sys.setCwd(Web.getCwd());
 		#end
 		
 		var r = new haxe.unit.TestRunner();
 		r.add(new HtmlTest());
 		
-		#if (php || neko)
+		#if sys
 		Lib.println("<pre>");
 		#end
 		
 		r.run();
 		
-		#if (php || neko)
+		#if sys
 		Lib.println("</pre>");
 		#end
 	}
