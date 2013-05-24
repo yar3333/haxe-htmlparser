@@ -2,11 +2,14 @@ package;
 
 import haxe.Serializer;
 import haxe.Unserializer;
-import sys.io.File;
 import haxe.htmlparser.HtmlParser;
 import haxe.htmlparser.HtmlNodeElement;
 import haxe.htmlparser.HtmlNodeText;
 import haxe.htmlparser.HtmlDocument;
+
+#if sys
+import sys.io.File;
+#end
 
 class HtmlTest extends haxe.unit.TestCase
 {
@@ -47,7 +50,7 @@ class HtmlTest extends haxe.unit.TestCase
     public function getParsedAsString(str:String) : String
     {
         var nodes = HtmlParser.parse(str);
-        return Lambda.fold(nodes, function(node, s) return s + node.toString(), "");
+        return nodes.join("");
     }
 
     public function testSimpleConvertDeconvert()
@@ -84,12 +87,14 @@ class HtmlTest extends haxe.unit.TestCase
         this.assertTrue(Type.getClass(subnodes[0]) == HtmlNodeText);
     }
     
-    public function testComplexParse()
+    #if sys
+	public function testComplexParse()
     {
 		var s = File.getContent('support/input.html');
 		File.saveContent("support/output.html", getParsedAsString(s));
 		assertEquals(s, File.getContent('support/output.html'));
     }
+	#end
     
     public function testSelectors()
     {
@@ -246,7 +251,8 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals(2, xml.children.length);
 		assertEquals(2, xml.nodes.length);
 	}
-    
+	
+	#if sys
 	public function testSpeed()
     {
         var str = File.getContent('support/input.html');
@@ -275,4 +281,5 @@ class HtmlTest extends haxe.unit.TestCase
 		
 		assertTrue(true);
     }
+	#end
 }

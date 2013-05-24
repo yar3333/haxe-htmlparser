@@ -228,7 +228,7 @@ class HtmlParser
 			var classes = [];
 			if (reg.matched(2) != '*')
 			{
-				var subreg : EReg = new EReg(reSubSelector, "is");
+				var subreg : EReg = new EReg(reSubSelector, "i");
 				var substr = reg.matched(2);
 				try
 				{
