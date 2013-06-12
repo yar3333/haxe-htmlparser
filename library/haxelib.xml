@@ -5,5 +5,5 @@
     <tag v='xml'/>
     <tag v='parser'/>
     <description>Simple crossplatform HTML/XML parser with css-like selectors support (see find() method).</description>
-    <version name='1.7'>Namespace support in the attribute names.</version>
+    <version name='1.8'>Namespace support in the attribute names.</version>
 </project>
