@@ -268,6 +268,17 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals(1, xml.nodes.length);
 	}
 	
+	public function testTagCase()
+	{
+		var xml = new HtmlDocument("<A />");
+		
+		var r = xml.find("A");
+		assertEquals(1, r.length);
+		
+		r = xml.find("a");
+		assertEquals(1, r.length);
+	}
+	
 	/*
 	#if sys
 	public function testSpeed()
