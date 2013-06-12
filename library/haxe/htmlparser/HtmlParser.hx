@@ -22,12 +22,12 @@ private typedef HtmlLexem =
 class HtmlParser
 {
     public static var selfClosingTags = { img:1, br:1, input:1, meta:1, link:1, hr:1, base:1, embed:1, spacer:1, source:1 };
-    static inline var regExpForID = '[a-z](?:-?[_a-z0-9])*';
+    static inline var reID = '[a-z](?:-?[_a-z0-9])*';
 
     static public function parse(str:String) : Array<HtmlNode>
     {
-		var reNamespacedID = regExpForID + "(?::" + regExpForID + ")?";
-        var reAttr = regExpForID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" ;
+		var reNamespacedID = reID + "(?::" + reID + ")?";
+        var reAttr = reID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" ;
 		var reScript = "[<]\\s*script\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*script\\s*>";
 		var reStyle = "<\\s*style\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*style\\s*>";
 		var reElementOpen = "<\\s*(" + reNamespacedID + ")";
@@ -175,7 +175,7 @@ class HtmlParser
     {
         var attributes = new Array<HtmlAttribute>();
 
-		var re = new EReg("(" + regExpForID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
+		var re = new EReg("(" + reID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
 		var parsedStr = str;
         while (parsedStr != null && parsedStr != '' && re.match(parsedStr))
         {
@@ -214,7 +214,7 @@ class HtmlParser
     
     private static function parseCssSelectorInner(selector): Array<CssSelector>
     {
-        var reSubSelector = '[.#]?' + regExpForID + '(?::' + regExpForID + ')?';
+        var reSubSelector = '[.#]?' + reID + '(?::' + reID + ')?';
         
         var parsedSelectors = [];
 		var reg = new EReg("([ >])((?:" + reSubSelector + ")+|[*])", "i");

@@ -4,13 +4,13 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="bin\index.js" />
+    <movie path="bin\index.n" />
     <movie fps="0" />
     <movie width="0" />
     <movie height="0" />
     <movie version="1" />
     <movie minorVersion="0" />
-    <movie platform="JavaScript" />
+    <movie platform="Neko" />
     <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -47,7 +47,7 @@
   <options>
     <option showHiddenPaths="True" />
     <option testMovie="OpenDocument" />
-    <option testMovieCommand="http://htmlparser/" />
+    <option testMovieCommand="http://htmlparser/index.n" />
   </options>
   <!-- Plugin storage -->
   <storage />
