@@ -1,6 +1,9 @@
 <project name='HtmlParser' url='https://code.google.com/p/haxe-htmlparser' license='LGPL'>
     <user name='yar3333'/>
     <tag v='cross'/>
-    <description>HaXe crossplatform port of the PHP Simple HTML DOM Parser.</description>
-    <version name='1.6'>Some bugfixes.</version>
+    <tag v='html'/>
+    <tag v='xml'/>
+    <tag v='parser'/>
+    <description>Simple crossplatform HTML/XML parser with css-like selectors support (see find() method).</description>
+    <version name='1.7'>Namespace support in the attribute names.</version>
 </project>
