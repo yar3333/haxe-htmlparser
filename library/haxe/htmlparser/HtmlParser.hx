@@ -26,15 +26,14 @@ class HtmlParser
 
     static public function parse(str:String) : Array<HtmlNode>
     {
-        var reID = regExpForID;
+		var reNamespacedID = regExpForID + "(?::" + regExpForID + ")?";
         var reAttr = regExpForID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" ;
-        var reElementName = reID + "(?::" + reID + ")?";
 		var reScript = "[<]\\s*script\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*script\\s*>";
 		var reStyle = "<\\s*style\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*style\\s*>";
-		var reElementOpen = "<\\s*(" + reElementName+ ")";
-        var reAttr = reID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)";
+		var reElementOpen = "<\\s*(" + reNamespacedID + ")";
+        var reAttr = reNamespacedID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)";
         var reElementEnd = "(/)?\\s*>";
-        var reElementClose = "<\\s*/\\s*(" + reElementName + ")\\s*>";
+        var reElementClose = "<\\s*/\\s*(" + reNamespacedID + ")\\s*>";
         var reComment = "<!--[\\s\\S]*?-->";
 		
         var reStr = "(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen 
@@ -77,7 +76,7 @@ class HtmlParser
 			var nodes =  parseInner(str,  matches, i);
             if (i.i < matches.length)
 			{
-				throw("Error parsing XML:\n<br>" + str);
+				throw("Error parsing XML at " + i.i + ":\n" + str);
 			}
             return nodes;
         }

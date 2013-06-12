@@ -252,6 +252,23 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals(2, xml.nodes.length);
 	}
 	
+	public function testHeader()
+	{
+		var xml = new HtmlDocument("<?xml version='1.0' encoding='UTF-8'?><doc>abc</doc>");
+		assertEquals(1, xml.children.length);
+		assertEquals(2, xml.nodes.length);
+		assertTrue(Std.is(xml.nodes[0], HtmlNodeText));
+		assertTrue(Std.is(xml.nodes[1], HtmlNodeElement));
+	}
+	
+	public function testNamespacedAttr()
+	{
+		var xml = new HtmlDocument("<S:Envelope xmlns:S=\"abc\"><S:Body><ns2:OperationHistoryData xmlns:ns2=\"def\"/></S:Body></S:Envelope>");
+		assertEquals(1, xml.children.length);
+		assertEquals(1, xml.nodes.length);
+	}
+	
+	/*
 	#if sys
 	public function testSpeed()
     {
@@ -282,4 +299,5 @@ class HtmlTest extends haxe.unit.TestCase
 		assertTrue(true);
     }
 	#end
+	*/
 }
