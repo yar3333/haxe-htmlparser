@@ -6,7 +6,7 @@ class HtmlAttribute
     public var value : String;
     public var quote : String;
 
-    public function new(name, value, quote) : Void
+    public function new(name:String, value:String, quote:String) : Void
     {
         this.name = name;
         this.value = value;

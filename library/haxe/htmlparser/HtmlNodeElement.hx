@@ -319,6 +319,16 @@ class HtmlNodeElement extends HtmlNode
         }
         return attrs;
     }
+	
+    public function getAttributesObject() : Dynamic<String>
+    {
+        var attrs = {};
+        for (attr in attributes)
+        {
+            Reflect.setField(attrs, attr.name, attr.value);
+        }
+        return attrs;
+    }
 
     public function setInnerText(text) : Void
     {

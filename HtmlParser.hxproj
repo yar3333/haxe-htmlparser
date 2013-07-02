@@ -45,7 +45,7 @@
   <postBuildCommand alwaysRun="False">xcopy tests\support bin\support /I /Y</postBuildCommand>
   <!-- Other project options -->
   <options>
-    <option showHiddenPaths="True" />
+    <option showHiddenPaths="False" />
     <option testMovie="OpenDocument" />
     <option testMovieCommand="http://htmlparser/index.n" />
   </options>
