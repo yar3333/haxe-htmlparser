@@ -1,9 +1,9 @@
 neko:
-	xcopy /Y /Q support\* bin
+	xcopy support bin /E /Y
 	haxe -cp ../library -cp src -main Main -neko bin/index.n
 	run.cmd neko index.n
 
 js:
-	xcopy /Y /Q support\* bin
+	xcopy support bin /E /Y
 	haxe -cp ../library -cp src -main Main -js bin/index.js
 	run.cmd start index.html
