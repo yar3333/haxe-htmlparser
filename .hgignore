@@ -1,3 +1,3 @@
 syntax: glob
-library.zip
+library/library.zip
 bin

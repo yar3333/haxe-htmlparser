@@ -16,7 +16,7 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="library" />
-    <class path="tests" />
+    <class path="tests\src" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -32,22 +32,23 @@
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\Start.hx" />
+    <compile path="tests\src\Main.hx" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
     <hidden path="bin" />
-    <hidden path="library.zip" />
+    <hidden path="library\library.zip" />
+    <hidden path="tests\bin" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />
   <!-- Executed after build -->
-  <postBuildCommand alwaysRun="False">xcopy tests\support bin\support /I /Y</postBuildCommand>
+  <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="OpenDocument" />
-    <option testMovieCommand="http://htmlparser/index.n" />
+    <option testMovieCommand="" />
   </options>
   <!-- Plugin storage -->
   <storage />

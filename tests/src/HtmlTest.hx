@@ -90,9 +90,9 @@ class HtmlTest extends haxe.unit.TestCase
     #if sys
 	public function testComplexParse()
     {
-		var s = File.getContent('support/input.html');
-		File.saveContent("support/output.html", getParsedAsString(s));
-		assertEquals(s, File.getContent('support/output.html'));
+		var s = File.getContent('input.html');
+		File.saveContent("output.html", getParsedAsString(s));
+		assertEquals(s, File.getContent('output.html'));
     }
 	#end
     
