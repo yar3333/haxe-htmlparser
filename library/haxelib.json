@@ -5,7 +5,7 @@
   "description": "Simple crossplatform HTML/XML parser with css-like selectors support (see find() method).",
   "contributors": ["yar3333"],
   "releasenote": "haxe 3 support",
-  "version": "1.8.8",
+  "version": "1.8.3",
   "url": "https://code.google.com/p/haxe-htmlparser",
   "dependencies": {}
 }
