@@ -1,9 +1,0 @@
-<project name='HtmlParser' url='https://code.google.com/p/haxe-htmlparser' license='LGPL'>
-    <user name='yar3333'/>
-    <tag v='cross'/>
-    <tag v='html'/>
-    <tag v='xml'/>
-    <tag v='parser'/>
-    <description>Simple crossplatform HTML/XML parser with css-like selectors support (see find() method).</description>
-    <version name='1.8.2'>HtmlNodeElement.getAttributesObject() method added.</version>
-</project>
