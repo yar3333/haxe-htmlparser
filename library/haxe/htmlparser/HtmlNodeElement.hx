@@ -141,9 +141,9 @@ class HtmlNodeElement extends HtmlNode
 		return false;
     }
     
-    public var innerHTML(innerHTML_getter, innerHTML_setter) : String;
+    public var innerHTML(get_innerHTML, set_innerHTML) : String;
 	
-	function innerHTML_setter(value:String) : String
+	function set_innerHTML(value:String) : String
 	{
 		var newNodes = HtmlParser.parse(value);
 		nodes = [];
@@ -152,7 +152,7 @@ class HtmlNodeElement extends HtmlNode
 		return value;
 	}
 	
-	function innerHTML_getter() : String
+	function get_innerHTML() : String
     {
         return Lambda.fold(nodes, function(node, s) return s + node.toString(), "");
     }
@@ -310,9 +310,9 @@ class HtmlNodeElement extends HtmlNode
         }
     }
 	
-    public function getAttributesAssoc() : Hash<String>
+    public function getAttributesAssoc() : Map<String, String>
     {
-        var attrs = new Hash<String>();
+        var attrs = new Map();
         for (attr in attributes)
         {
             attrs.set(attr.name, attr.value); 
