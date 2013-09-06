@@ -1,0 +1,43 @@
+####################################################
+# Input:
+#---------------------------------------------------
+# HAXE_COMPILER_OPTIONS - additional options
+# MAIN - main class (Default is Main).
+####################################################
+
+ifndef NEKOPATH
+    $(error NEKOPATH is undefined.)
+endif
+
+ifndef MAIN
+    MAIN:=Main
+endif
+
+export NEKOPATH:=$(NEKOPATH):../../library/ndll/$(PLATFORM)
+
+neko: copy-assets bin/index.n
+	cd bin && neko index.n 
+
+js: copy-assets bin/index.js
+	cd bin && cmd /C start index.html
+
+php: copy-assets bin/index.php
+	cd bin && php index.php
+
+bin/index.n: | bin
+	haxe $(HAXE_COMPILER_OPTIONS) -cp ../library -cp src -main $(MAIN) -neko bin/index.n
+
+bin/index.js: | bin
+	haxe $(HAXE_COMPILER_OPTIONS) -cp ../library -cp src -main $(MAIN) -js bin/index.js
+
+bin/index.php: | bin
+	haxe $(HAXE_COMPILER_OPTIONS) -cp ../library -cp src -main $(MAIN) -php bin
+
+copy-assets: | bin
+	test -d assets && cp -r assets/* bin || true
+
+bin:
+	mkdir -p bin
+	
+clean:
+	rm -rf bin/*
