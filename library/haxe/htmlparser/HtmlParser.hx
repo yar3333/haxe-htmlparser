@@ -22,52 +22,50 @@ private typedef HtmlLexem =
 class HtmlParser
 {
     public static var selfClosingTags = { img:1, br:1, input:1, meta:1, link:1, hr:1, base:1, embed:1, spacer:1, source:1 };
-    static inline var reID = '[a-z](?:-?[_a-z0-9])*';
+    
+	static var reID = '[a-z](?:-?[_a-z0-9])*';
+	static var reNamespacedID = reID + "(?::" + reID + ")?";
+	static var reScript = "[<]\\s*script\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*script\\s*>";
+	static var reStyle = "<\\s*style\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*style\\s*>";
+	static var reElementOpen = "<\\s*(" + reNamespacedID + ")";
+	static var reAttr = reNamespacedID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)";
+	static var reElementEnd = "(/)?\\s*>";
+	static var reElementClose = "<\\s*/\\s*(" + reNamespacedID + ")\\s*>";
+	static var reComment = "<!--[\\s\\S]*?-->";
+		
+	static var reMain = new EReg("(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")", "i");
+	
+	static var reParseAttrs = new EReg("(" + reID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
 
     static public function parse(str:String) : Array<HtmlNode>
     {
-		var reNamespacedID = reID + "(?::" + reID + ")?";
-        var reAttr = reID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" ;
-		var reScript = "[<]\\s*script\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*script\\s*>";
-		var reStyle = "<\\s*style\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*style\\s*>";
-		var reElementOpen = "<\\s*(" + reNamespacedID + ")";
-        var reAttr = reNamespacedID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)";
-        var reElementEnd = "(/)?\\s*>";
-        var reElementClose = "<\\s*/\\s*(" + reNamespacedID + ")\\s*>";
-        var reComment = "<!--[\\s\\S]*?-->";
-		
-        var reStr = "(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen 
-		          + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")";
-		
-		var re = new EReg(reStr, "i");
 		var matches = new Array<HtmlLexem>();
-		var parsedStr : String = str;
-		var cutted = 0;
-		while (parsedStr != null && parsedStr != "" && re.match(parsedStr))
+		
+		var pos = 0; while (pos < str.length && reMain.matchSub(str, pos))
 		{
+			var p = reMain.matchedPos();
+			
 			var r = {
-				 all : re.matched(0)
-				,allPos : re.matchedPos().pos + cutted
-				,script : getMatched(re, 1)
-				,scriptAttrs : getMatched(re, 2)
-				,scriptText : getMatched(re, 3)
-				,style : getMatched(re, 4)
-				,styleAttrs : getMatched(re, 5)
-				,styleText : getMatched(re, 6)
-				,elem : getMatched(re, 7)
-				,tagOpen : getMatched(re, 8)
-				,attrs : getMatched(re, 9)
-				,tagEnd : getMatched(re, 10)
-				,close : getMatched(re, 11)
-				,tagClose : getMatched(re, 12)
-				,comment : getMatched(re, 13)
+				 all : reMain.matched(0)
+				,allPos : p.pos
+				,script : getMatched(reMain, 1)
+				,scriptAttrs : getMatched(reMain, 2)
+				,scriptText : getMatched(reMain, 3)
+				,style : getMatched(reMain, 4)
+				,styleAttrs : getMatched(reMain, 5)
+				,styleText : getMatched(reMain, 6)
+				,elem : getMatched(reMain, 7)
+				,tagOpen : getMatched(reMain, 8)
+				,attrs : getMatched(reMain, 9)
+				,tagEnd : getMatched(reMain, 10)
+				,close : getMatched(reMain, 11)
+				,tagClose : getMatched(reMain, 12)
+				,comment : getMatched(reMain, 13)
 			};
 			
 			matches.push(r);
 			
-			var rightStr = re.matchedRight();
-			cutted += parsedStr.length - rightStr.length;
-			parsedStr = rightStr;
+			pos = p.pos + p.len;
 		}
         
 		if (matches.length > 0)
@@ -84,11 +82,10 @@ class HtmlParser
         return str.length > 0 ? cast [ new HtmlNodeText(str) ] : [];
     }
 	
-	
 	static function getMatched(re:EReg, n:Int)
 	{
 		try { return re.matched(n); } 
-		catch (e:Dynamic) { return null; }
+		catch (_:Dynamic) { return null; }
 	}
 	
 	private static function parseInner(str:String, matches:Array<HtmlLexem>, i:{i:Int}) : Array<HtmlNode>
@@ -175,12 +172,10 @@ class HtmlParser
     {
         var attributes = new Array<HtmlAttribute>();
 
-		var re = new EReg("(" + reID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
-		var parsedStr = str;
-        while (parsedStr != null && parsedStr != '' && re.match(parsedStr))
+		var pos = 0; while (pos < str.length && reParseAttrs.matchSub(str, pos))
         {
-			var name =  re.matched(1);
-			var value = re.matched(2);
+			var name = reParseAttrs.matched(1);
+			var value = reParseAttrs.matched(2);
 			var quote = value.substr(0, 1);
 			if (quote == '"' || quote == "'")
 			{
@@ -191,7 +186,9 @@ class HtmlParser
 				quote = '';
 			}
 			attributes.push(new HtmlAttribute(name, value, quote));
-			parsedStr = re.matchedRight();
+			
+			var p = reParseAttrs.matchedPos();
+			pos = p.pos + p.len;
         }
 
         return attributes;

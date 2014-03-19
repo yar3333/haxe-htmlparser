@@ -6,7 +6,7 @@ import haxe.Unserializer;
 class HtmlNodeElement extends HtmlNode
 {
     public var name : String;
-    private var attributes : Array<HtmlAttribute>;
+    public var attributes : Array<HtmlAttribute>;
     public var nodes : Array<HtmlNode>;
     public var children : Array<HtmlNodeElement>;
     
@@ -68,22 +68,27 @@ class HtmlNodeElement extends HtmlNode
 
     public override function toString() 
     {
-        var sAttrs = Lambda.fold(attributes, function(a, s) return s + " " + a.toString(), "");
+        var sAttrs = new StringBuf();
+		for (a in attributes)
+		{
+			sAttrs.add(" ");
+			sAttrs.add(a.toString());
+		}
         
         if (nodes.length == 0 && (Reflect.hasField(HtmlParser.selfClosingTags, name) || name.indexOf(':') >= 0))
 		{
-			return "<" + name + sAttrs + " />";
+			return "<" + name + sAttrs.toString() + " />";
 		}
 		
-		var sChildren = "";
+		var sChildren = new StringBuf();
 		for (node in nodes)
 		{
-			sChildren += node.toString();
+			sChildren.add(node.toString());
 		}
 		
         return name != null && name != ''
-            ? "<" + name + sAttrs + ">" + sChildren + "</" + name + ">"
-            : sChildren;
+            ? "<" + name + sAttrs.toString() + ">" + sChildren.toString() + "</" + name + ">"
+            : sChildren.toString();
     }
 
 	public function getAttribute(name:String) : String
@@ -154,7 +159,12 @@ class HtmlNodeElement extends HtmlNode
 	
 	function get_innerHTML() : String
     {
-        return Lambda.fold(nodes, function(node, s) return s + node.toString(), "");
+		var r = new StringBuf();
+		for (node in nodes)
+		{
+			r.add(node.toString());
+		}
+		return r.toString();
     }
     
     public function find(selector:String) : Array<HtmlNodeElement>
