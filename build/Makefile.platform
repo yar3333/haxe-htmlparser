@@ -1,0 +1,31 @@
+####################################################
+# Output:
+#---------------------------------------------------
+# PLATFORM - Windows/Windows64/Linux/Linux64/Mac/Mac64
+####################################################
+
+ifeq ($(OS),Windows_NT)
+	ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+		PLATFORM=Windows64
+	else
+		PLATFORM=Windows
+	endif
+else
+    ifeq ($(shell uname -s),Linux)
+		ifeq ($(shell getconf LONG_BIT),64)
+			PLATFORM=Linux64
+		else
+			PLATFORM=Linux
+		endif
+	else
+		ifeq ($(shell uname -s),Darwin)
+			ifeq ($(shell getconf LONG_BIT),64)
+				PLATFORM=Mac64
+			else
+				PLATFORM=Mac
+			endif
+		else
+			$(error Can't detect OS type.)
+		endif
+	endif
+endif
