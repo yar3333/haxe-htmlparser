@@ -22,6 +22,7 @@
   <build>
     <option directives="" />
     <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
     <option additional="" />
@@ -39,6 +40,7 @@
     <hidden path="bin" />
     <hidden path="library\library.zip" />
     <hidden path="tests\bin" />
+    <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />
