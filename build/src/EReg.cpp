@@ -1,40 +1,55 @@
+#include <string>
+
 #include "EReg.h"
 
-EReg::EReg(const string &re, const string &options)
+EReg::EReg(const string restr, const string options)
+	: re(restr, options.find("i") != string::npos ? boost::regex_constants::icase : 0)
 {
-	this->re = re;
-	this->options = options;
 }
 
-BOOL EReg::matchSub(const string &str, int pos)
+bool EReg::match(const char *str)
 {
-	return FALSE;
+	startPos = 0;
+	return regex_search(str, matches, re);
+}
+
+bool EReg::matchSub(const char *str, int pos)
+{
+	startPos = pos;
+	return regex_search(str + pos, matches, re);
 }
 
 ERegPos EReg::matchedPos()
 {
 	ERegPos r;
-	r.len = 0;
-	r.pos = 0;
+	r.len = matches.length();
+	r.pos = startPos + matches.position();
 	return r;
 }
 
 string EReg::matched(int n)
 {
-	return "";
+	return matches[n];
 }
 
-vector<string> EReg::split(const string &sep)
+vector<string> EReg::split(const char *str)
 {
-	return vector<string>();
+	vector<string> r;
+	while (regex_search(str, matches, re))
+	{
+		r.push_back(matches.prefix());
+		str += matches.position() + matches.length();
+	}
+	r.push_back(string(str));
+	return r;
 }
 
-BOOL EReg::match(const string &str)
+string EReg::matchedLeft()
 {
-	return FALSE;
+	return matches.prefix();
 }
 
 string EReg::matchedRight()
 {
-	return "";
+	return matches.suffix();
 }

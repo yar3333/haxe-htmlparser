@@ -1,8 +1,8 @@
 #include "Serializer.h"
 
 /*
-BOOL Serializer::USE_CACHE = false;
-BOOL Serializer::USE_ENUM_INDEX = false;
+bool Serializer::USE_CACHE = false;
+bool Serializer::USE_ENUM_INDEX = false;
 char *Serializer::BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
 
 Serializer::Serializer()

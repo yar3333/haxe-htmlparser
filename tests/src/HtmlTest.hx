@@ -13,7 +13,23 @@ import sys.io.File;
 
 class HtmlTest extends haxe.unit.TestCase
 {
-    public function testText()
+	public function testParse()
+	{
+		print("testParse\n");
+		var nodes = HtmlParser.parse("<a>abc</a><b>asa</b>ttt");
+		trace(nodes);
+		this.assertEquals(1, nodes.length);
+	}
+	
+	public function testParseFast()
+	{
+		print("testParseFast\n");
+		var nodes = HtmlParser.parseFast("<a>abc</a><b>asa</b>ttt");
+		trace(nodes);
+		this.assertEquals(1, nodes.length);
+	}
+	
+    /*public function testText()
     {
 		var nodes = HtmlParser.parse("abc");
         this.assertEquals(1, nodes.length);
@@ -277,7 +293,7 @@ class HtmlTest extends haxe.unit.TestCase
 		
 		r = xml.find("a");
 		assertEquals(1, r.length);
-	}
+	}*/
 	
 	/*
 	#if sys

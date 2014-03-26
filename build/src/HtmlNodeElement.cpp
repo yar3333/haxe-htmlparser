@@ -41,6 +41,11 @@ string HtmlNodeElement::toString()
 		: sChildren;
 }
 
+int HtmlNodeElement::getKind()
+{
+	return HTMLNODE_KIND_ELEMENT;
+}
+
 /*
 void HtmlNodeElement::hxSerialize(Serializer &s)
 {
@@ -125,7 +130,7 @@ void HtmlNodeElement::removeAttribute(string name)
 	}
 }
 
-BOOL HtmlNodeElement::hasAttribute(string name)
+bool HtmlNodeElement::hasAttribute(string name)
 {
 	auto nameLC = name.toLowerCase();
 	

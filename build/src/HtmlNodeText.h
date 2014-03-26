@@ -10,6 +10,8 @@ class HtmlNodeText : public HtmlNode
     
 	public: HtmlNodeText(const string &text);
 	public: string toString();
+	public: virtual int getKind();
+	
 	//public: void hxSerialize(Serializer &s);
 	//public: void hxUnserialize(Unserializer &s);
 };

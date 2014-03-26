@@ -5,9 +5,9 @@
 
 /*class Serializer
 {
-	public: static BOOL USE_CACHE;
+	public: static bool USE_CACHE;
 
-	public: static BOOL USE_ENUM_INDEX;
+	public: static bool USE_ENUM_INDEX;
 
 	static char *BASE64;
 
