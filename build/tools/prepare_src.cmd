@@ -1,1 +1,0 @@
-haxelib run refactor convert ../../library [.hx]$ ../src /[.]hx$/.cpp/ prepare_src.txt
