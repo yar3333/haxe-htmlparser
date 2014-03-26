@@ -43,6 +43,8 @@ class HtmlParser
 		
 		var pos = 0; while (pos < str.length && reMain.matchSub(str, pos))
 		{
+			neko.Lib.println("str+pos = " + str.substr(pos));
+			
 			var p = reMain.matchedPos();
 			
 			var r = {
@@ -81,6 +83,18 @@ class HtmlParser
 		
         return str.length > 0 ? cast [ new HtmlNodeText(str) ] : [];
     }
+	
+	#if neko
+	static var htmlparser_parse;
+	public static function parseFast(str:String) : Array<Int>
+	{
+		if (htmlparser_parse == null)
+		{
+			htmlparser_parse = neko.Lib.load("htmlparser", "htmlparser_parse", 1);
+		}
+		return neko.Lib.nekoToHaxe(htmlparser_parse(neko.Lib.haxeToNeko(str)));
+	}
+	#end
 	
 	static function getMatched(re:EReg, n:Int)
 	{

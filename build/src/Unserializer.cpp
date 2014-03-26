@@ -18,7 +18,7 @@ Unserializer::Unserializer(string buf)
 int Unserializer::readDigits()
 {
 	int k = 0;
-	BOOL s = false;
+	bool s = false;
 	int fpos = pos;
 	while (true)
 	{

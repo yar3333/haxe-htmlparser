@@ -1,7 +1,9 @@
 #ifndef EREG_H
 #define	EREG_H
 
-#include "common.h"
+#include <boost/regex.hpp>
+
+using namespace std;
 
 struct ERegPos
 {
@@ -11,19 +13,19 @@ struct ERegPos
 
 class EReg
 {
-	protected: string re;
-	protected: string options;
+	protected: boost::regex re;
+	protected: boost::cmatch matches;
+	protected: int startPos;
 	
-	public: EReg(const string &re, const string &options);
+	public: EReg(const string re, const string options);
 	
-	public: BOOL matchSub(const string &str, int pos);
+	public: bool match(const char *str);
+	public: bool matchSub(const char *str, int pos);
 	public: ERegPos matchedPos();
 	public: string matched(int n);
-	public: vector<string> split(const string &sep);
-	public: BOOL match(const string &str);
+	public: vector<string> split(const char *str);
+	public: string matchedLeft();
 	public: string matchedRight();
-
-
 };
 
 #endif	/* EREG_H */

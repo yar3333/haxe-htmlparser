@@ -33,12 +33,16 @@ string strToLowerCase(string s)
 EReg HtmlParser::reMain("(" RE_SCRIPT ")|(" RE_STYLE ")|(" RE_ELEMENT_OPEN "((?:\\s+" RE_ATTR ")*)\\s*" RE_ELEMENT_END ")|(" RE_ELEMENT_CLOSE ")|(" RE_COMMENT ")", "i");
 EReg HtmlParser::reParseAttrs("(" RE_ID ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
 
-vector<shared_ptr<HtmlNode>> HtmlParser::parse(string str)
+vector<shared_ptr<HtmlNode>> HtmlParser::parse(const char *str)
 {
+	cout << "HtmlParser::parse" << endl;
+	
 	vector<HtmlLexem> matches;
 	
-	auto pos = 0; while (pos < str.length() && reMain.matchSub(str, pos))
+	auto pos = 0; while (*(str+pos) && reMain.matchSub(str, pos))
 	{
+		cout << "str+pos = " << str+pos << endl;
+		
 		auto p = reMain.matchedPos();
 		
 		HtmlLexem r;
@@ -84,7 +88,7 @@ vector<shared_ptr<HtmlNode>> HtmlParser::parse(string str)
 	return vector<shared_ptr<HtmlNode>>();
 }
 
-vector<shared_ptr<HtmlNode>> HtmlParser::parseInner(string str, vector<HtmlLexem> &matches, int &i)
+vector<shared_ptr<HtmlNode>> HtmlParser::parseInner(const char *str, vector<HtmlLexem> &matches, int &i)
 {
 	vector<shared_ptr<HtmlNode>> nodes;
 	
@@ -93,7 +97,7 @@ vector<shared_ptr<HtmlNode>> HtmlParser::parseInner(string str, vector<HtmlLexem
 	
 	if (prevEnd < curStart)
 	{
-		nodes.push_back(make_shared<HtmlNodeText>(str.substr(prevEnd, curStart - prevEnd)));
+		nodes.push_back(make_shared<HtmlNodeText>(string(str + prevEnd, curStart - prevEnd)));
 	}
 
 	while (i < matches.size())
@@ -107,14 +111,14 @@ vector<shared_ptr<HtmlNode>> HtmlParser::parseInner(string str, vector<HtmlLexem
 		else
 		if (m.script != "")
 		{
-			auto scriptNode = make_shared<HtmlNodeElement>("script", parseAttrs(m.scriptAttrs));
+			auto scriptNode = make_shared<HtmlNodeElement>("script", parseAttrs(m.scriptAttrs.c_str()));
 			scriptNode->addChild(make_shared<HtmlNodeText>(m.scriptText));
 			nodes.push_back(scriptNode);
 		}
 		else
 		if (m.style != "")
 		{
-			auto styleNode = make_shared<HtmlNodeElement>("style", parseAttrs(m.styleAttrs));
+			auto styleNode = make_shared<HtmlNodeElement>("style", parseAttrs(m.styleAttrs.c_str()));
 			styleNode->addChild(make_shared<HtmlNodeText>(m.styleText));
 			nodes.push_back(styleNode);
 		}
@@ -131,10 +135,10 @@ vector<shared_ptr<HtmlNode>> HtmlParser::parseInner(string str, vector<HtmlLexem
 		}
 		
 		auto curEnd = matches[i].allPos + matches[i].all.length();
-		auto nextStart = i + 1 < matches.size() ? matches[i + 1].allPos : str.length();
+		auto nextStart = i + 1 < matches.size() ? matches[i + 1].allPos : strlen(str);
 		if (curEnd < nextStart)
 		{
-			nodes.push_back(make_shared<HtmlNodeText>(str.substr(curEnd, nextStart - curEnd)));
+			nodes.push_back(make_shared<HtmlNodeText>(string(str + curEnd, nextStart - curEnd)));
 		}
 		
 		i++;
@@ -143,13 +147,13 @@ vector<shared_ptr<HtmlNode>> HtmlParser::parseInner(string str, vector<HtmlLexem
 	return nodes;
 }
 
-shared_ptr<HtmlNodeElement> HtmlParser::parseElement(string str, vector<HtmlLexem> &matches, int &i)
+shared_ptr<HtmlNodeElement> HtmlParser::parseElement(const char *str, vector<HtmlLexem> &matches, int &i)
 {
 	auto tag = matches[i].tagOpen;
 	auto attrs = matches[i].attrs;
 	auto isWithClose = matches[i].tagEnd != "" || find(selfClosingTags.begin(), selfClosingTags.end(), tag) != selfClosingTags.end();
 	
-	auto elem = make_shared<HtmlNodeElement>(tag, parseAttrs(attrs));
+	auto elem = make_shared<HtmlNodeElement>(tag, parseAttrs(attrs.c_str()));
 	if (!isWithClose)
 	{
 		i++;
@@ -164,11 +168,11 @@ shared_ptr<HtmlNodeElement> HtmlParser::parseElement(string str, vector<HtmlLexe
 	return elem;
 }
 
-vector<HtmlAttribute> HtmlParser::parseAttrs(string str)
+vector<HtmlAttribute> HtmlParser::parseAttrs(const char *str)
 {
 	vector<HtmlAttribute> attributes;
 
-	auto pos = 0; while (pos < str.length() && reParseAttrs.matchSub(str, pos))
+	auto pos = 0; while (*(str+pos) && reParseAttrs.matchSub(str, pos))
 	{
 		auto name = reParseAttrs.matched(1);
 		auto value = reParseAttrs.matched(2);
@@ -190,10 +194,10 @@ vector<HtmlAttribute> HtmlParser::parseAttrs(string str)
 	return attributes;
 }
 
-vector<vector<CssSelector>> HtmlParser::parseCssSelector(string &selector)
+vector<vector<CssSelector>> HtmlParser::parseCssSelector(string selector)
 {
 	EReg reg("\\s*,\\s*", "");
-	auto selectors = reg.split(selector);
+	auto selectors = reg.split(selector.c_str());
 	vector<vector<CssSelector>> r;
 	for (auto &s : selectors)
 	{
@@ -205,7 +209,7 @@ vector<vector<CssSelector>> HtmlParser::parseCssSelector(string &selector)
 	return r;
 }
 
-vector<CssSelector> HtmlParser::parseCssSelectorInner(string &selector)
+vector<CssSelector> HtmlParser::parseCssSelectorInner(string selector)
 {
 	string reSubSelector("[.#]?"); reSubSelector+=RE_ID; reSubSelector+="(?::"; reSubSelector+=RE_ID; reSubSelector+=")?";
 	
@@ -213,7 +217,7 @@ vector<CssSelector> HtmlParser::parseCssSelectorInner(string &selector)
 	EReg reg(string("([ >])((?:" + reSubSelector + ")+|[*])"), "i");
 	
 	auto strSelector = string(" ") + selector;
-	while (reg.match(strSelector))
+	while (reg.match(strSelector.c_str()))
 	{
 		vector<string> tags;
 		vector<string> ids;
@@ -222,7 +226,7 @@ vector<CssSelector> HtmlParser::parseCssSelectorInner(string &selector)
 		{
 			EReg subreg(reSubSelector, "i");
 			auto substr = reg.matched(2);
-			while(subreg.match(substr))
+			while (subreg.match(substr.c_str()))
 			{
 				auto s = subreg.matched(0);
 				if      (s.substr(0, 1) == "#") ids.push_back(s.substr(1));

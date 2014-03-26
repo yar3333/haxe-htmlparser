@@ -16,6 +16,7 @@ class HtmlNodeElement : public HtmlNode
 	public: virtual ~HtmlNodeElement();
     public: void addChild(shared_ptr<HtmlNode> node);
     public: virtual string toString();
+	public: virtual int getKind();
     
 	//public: void hxSerialize(Serializer &s);
 	//public: void hxUnserialize(Unserializer &s);
@@ -26,7 +27,7 @@ class HtmlNodeElement : public HtmlNode
 	public: string getAttribute(string name);
     public: void setAttribute(string name, string value);
     public: void removeAttribute(string name);
-    public: BOOL hasAttribute(string name);
+    public: bool hasAttribute(string name);
     
 	public: string set_innerHTML(string value);
 	public: string get_innerHTML();
