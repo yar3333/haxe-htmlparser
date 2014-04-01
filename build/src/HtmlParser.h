@@ -20,8 +20,8 @@ class HtmlParser
     protected: static shared_ptr<HtmlNodeElement> parseElement(const char *str, vector<HtmlLexem> &matches, int &i);
 
     protected: static vector<HtmlAttribute> parseAttrs(const char *str);
-    public:    static vector<vector<CssSelector>> parseCssSelector(string selector);
-    protected: static vector<CssSelector> parseCssSelectorInner(string selector);
+    public:    static vector<vector<CssSelector>> parseCssSelector(string &selector);
+    protected: static vector<CssSelector> parseCssSelectorInner(string &selector);
 };
 
 #endif

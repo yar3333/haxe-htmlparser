@@ -35,14 +35,10 @@ EReg HtmlParser::reParseAttrs("(" RE_ID ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9
 
 vector<shared_ptr<HtmlNode>> HtmlParser::parse(const char *str)
 {
-	cout << "HtmlParser::parse" << endl;
-	
 	vector<HtmlLexem> matches;
 	
 	auto pos = 0; while (*(str+pos) && reMain.matchSub(str, pos))
 	{
-		cout << "str+pos = " << str+pos << endl;
-		
 		auto p = reMain.matchedPos();
 		
 		HtmlLexem r;
@@ -194,7 +190,7 @@ vector<HtmlAttribute> HtmlParser::parseAttrs(const char *str)
 	return attributes;
 }
 
-vector<vector<CssSelector>> HtmlParser::parseCssSelector(string selector)
+vector<vector<CssSelector>> HtmlParser::parseCssSelector(string &selector)
 {
 	EReg reg("\\s*,\\s*", "");
 	auto selectors = reg.split(selector.c_str());
@@ -209,7 +205,7 @@ vector<vector<CssSelector>> HtmlParser::parseCssSelector(string selector)
 	return r;
 }
 
-vector<CssSelector> HtmlParser::parseCssSelectorInner(string selector)
+vector<CssSelector> HtmlParser::parseCssSelectorInner(string &selector)
 {
 	string reSubSelector("[.#]?"); reSubSelector+=RE_ID; reSubSelector+="(?::"; reSubSelector+=RE_ID; reSubSelector+=")?";
 	
