@@ -2,37 +2,17 @@ package;
 
 import haxe.Serializer;
 import haxe.Unserializer;
+import haxe.htmlparser.HtmlParser;
 import haxe.htmlparser.HtmlNodeElement;
 import haxe.htmlparser.HtmlNodeText;
 import haxe.htmlparser.HtmlDocument;
-
-import haxe.htmlparser.HtmlParser;
-import haxe.htmlparser.HtmlParserNeko;
 
 #if sys
 import sys.io.File;
 #end
 
-//typedef HtmlParser = haxe.htmlparser.HtmlParserNeko;
-
 class HtmlTest extends haxe.unit.TestCase
 {
-	/*public function testParse()
-	{
-		print("testParse\n");
-		var nodes = HtmlParser.parse("<a>abc</a><b>asa</b>ttt");
-		trace(nodes);
-		this.assertEquals(1, nodes.length);
-	}*/
-	
-	/*public function testParseFast()
-	{
-		print("testParseFast\n");
-		var nodes = haxe.htmlparser.HtmlParserNeko.parse("<a>abc</a><b>asa</b>ttt");
-		trace(nodes);
-		this.assertEquals(1, nodes.length);
-	}*/
-	
     public function testText()
     {
 		var nodes = HtmlParser.parse("abc");
@@ -299,66 +279,36 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals(1, r.length);
 	}
 	
+	/*
 	#if sys
-	
-	/*public function testParseSpeed()
+	public function testSpeed()
     {
+        var str = File.getContent('support/input.html');
         var loops = 1000;
         
-		var str = File.getContent('input.html');
-        
-        var start = Sys.cpuTime();
+        var start = Date.now();
 		for (i in 0...loops)
         {
-            HtmlParser.parse(str);
+            var xml = new HtmlDocument(str);
         }
+        var parseTime = (Date.now().getTime() - start.getTime()) / loops;
 		
-		print("\n[time parse = " + Std.int(((Sys.cpuTime() - start) / loops) * 1000) + "ms per one]\n");
-		
-		assertTrue(true);
-    }
-	
-	public function testUnserializeSpeed()
-    {
-        var loops = 1000;
-        
-		var str = File.getContent('input.html');
-        
         var xml = new HtmlDocument(str);
         var ser = new Serializer();
 		ser.useCache = true;
 		ser.serialize(xml);
-		var serialized = ser.toString();
-        
-        var start = Sys.cpuTime();
+		var saved = ser.toString();
+        start = Date.now();
         for (i in 0...loops)
         {
-            Unserializer.run(serialized);
+            xml = Unserializer.run(saved);
         }
+        var unserializeTime = (Date.now().getTime() - start.getTime()) / loops;
         
-		print("\n[time unserialize = " + Std.int(((Sys.cpuTime() - start) / loops) * 1000) + "ms per one]\n");
-		
-		assertTrue(true);
-    }*/
-	
-	#if neko
-	public function testParseNekoSpeed()
-    {
-        var loops = 1;
-        
-		var str = File.getContent('input.html');
-        
-        var start = Sys.cpuTime();
-		for (i in 0...loops)
-        {
-            HtmlParserNeko.parse(str);
-        }
-		
-		print("\n[time neko parse = " + Std.int(((Sys.cpuTime() - start) / loops) * 1000) + "ms per one]\n");
+		print("[time parse/unserialize: " + parseTime + "/" + unserializeTime + "]");
 		
 		assertTrue(true);
     }
 	#end
-	
-	#end
+	*/
 }
