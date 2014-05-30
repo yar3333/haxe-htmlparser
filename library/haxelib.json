@@ -6,6 +6,6 @@
   "contributors": ["yar3333"],
   "releasenote": "Speed optimizations.",
   "version": "1.8.5",
-  "url": "https://code.google.com/p/haxe-htmlparser/",
+  "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
   "dependencies": {}
 }
