@@ -65,9 +65,14 @@ class HtmlNodeElement extends HtmlNode
             }
         }
     }
-
-    public override function toString() 
+	
+	public override function toString() : String
     {
+		return toStringWithSelfClosingTags(HtmlParser.SELF_CLOSING_TAGS_HTML);
+    }
+	
+    inline function toStringWithSelfClosingTags(selfClosingTags:Dynamic) : String
+	{
         var sAttrs = new StringBuf();
 		for (a in attributes)
 		{
@@ -75,7 +80,7 @@ class HtmlNodeElement extends HtmlNode
 			sAttrs.add(a.toString());
 		}
         
-        if (nodes.length == 0 && (Reflect.hasField(HtmlParser.selfClosingTags, name) || name.indexOf(':') >= 0))
+        if (nodes.length == 0 && (Reflect.hasField(selfClosingTags, name) || name.indexOf(':') >= 0))
 		{
 			return "<" + name + sAttrs.toString() + " />";
 		}
@@ -89,8 +94,9 @@ class HtmlNodeElement extends HtmlNode
         return name != null && name != ''
             ? "<" + name + sAttrs.toString() + ">" + sChildren.toString() + "</" + name + ">"
             : sChildren.toString();
-    }
-
+		
+	}
+	
 	public function getAttribute(name:String) : String
 	{
 		var nameLC = name.toLowerCase();
@@ -150,7 +156,7 @@ class HtmlNodeElement extends HtmlNode
 	
 	function set_innerHTML(value:String) : String
 	{
-		var newNodes = HtmlParser.parse(value);
+		var newNodes = HtmlParser.run(value);
 		nodes = [];
 		children = [];
 		for (node in newNodes) addChild(node);

@@ -21,9 +21,9 @@ private typedef HtmlLexem =
 
 class HtmlParser
 {
-    public static var selfClosingTags = { img:1, br:1, input:1, meta:1, link:1, hr:1, base:1, embed:1, spacer:1, source:1 };
+    public static var SELF_CLOSING_TAGS_HTML(default, null) : Dynamic = { img:1, br:1, input:1, meta:1, link:1, hr:1, base:1, embed:1, spacer:1, source:1 };
     
-	static var reID = '[a-z](?:-?[_a-z0-9])*';
+	static var reID = "[a-z](?:-?[_a-z0-9])*";
 	static var reNamespacedID = reID + "(?::" + reID + ")?";
 	static var reScript = "[<]\\s*script\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*script\\s*>";
 	static var reStyle = "<\\s*style\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*style\\s*>";
@@ -32,19 +32,25 @@ class HtmlParser
 	static var reElementEnd = "(/)?\\s*>";
 	static var reElementClose = "<\\s*/\\s*(" + reNamespacedID + ")\\s*>";
 	static var reComment = "<!--[\\s\\S]*?-->";
-		
+	
 	static var reMain = new EReg("(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")", "i");
 	
 	static var reParseAttrs = new EReg("(" + reID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
-
-    static public function parse(str:String) : Array<HtmlNode>
+	
+	var matches : Array<HtmlLexem>;
+	var str : String;
+	var i : Int;
+	
+	public static function run(str:String) : Array<HtmlNode> return new HtmlParser().parse(str);
+	
+	function new() { }
+	
+	public function parse(str:String) : Array<HtmlNode>
     {
-		var matches = new Array<HtmlLexem>();
-		
+		matches = [];
 		var pos = 0; while (pos < str.length && reMain.matchSub(str, pos))
 		{
 			var p = reMain.matchedPos();
-			
 			var r = {
 				 all : reMain.matched(0)
 				,allPos : p.pos
@@ -62,19 +68,18 @@ class HtmlParser
 				,tagClose : getMatched(reMain, 12)
 				,comment : getMatched(reMain, 13)
 			};
-			
 			matches.push(r);
-			
 			pos = p.pos + p.len;
 		}
         
 		if (matches.length > 0)
         {
-            var i = { i:0 };
-			var nodes =  parseInner(str,  matches, i);
-            if (i.i < matches.length)
+			this.str = str;
+			this.i = 0;
+			var nodes = processMatches();
+            if (i < matches.length)
 			{
-				throw("Error parsing XML at " + i.i + ":\n" + str);
+				throw("Error parsing XML at " + i + ":\n" + str);
 			}
             return nodes;
         }
@@ -82,50 +87,44 @@ class HtmlParser
         return str.length > 0 ? cast [ new HtmlNodeText(str) ] : [];
     }
 	
-	static function getMatched(re:EReg, n:Int)
-	{
-		try { return re.matched(n); } 
-		catch (_:Dynamic) { return null; }
-	}
-	
-	private static function parseInner(str:String, matches:Array<HtmlLexem>, i:{i:Int}) : Array<HtmlNode>
+	function processMatches() : Array<HtmlNode>
     {
 		var nodes = new Array<HtmlNode>();
         
-		var prevEnd = i.i > 0 ? matches[i.i - 1].allPos + matches[i.i - 1].all.length : 0;
-        var curStart = matches[i.i].allPos;
+		var prevEnd = i > 0 ? matches[i - 1].allPos + matches[i - 1].all.length : 0;
+        var curStart = matches[i].allPos;
         
 		if (prevEnd < curStart)
         {
             nodes.push(new HtmlNodeText(str.substr(prevEnd, curStart - prevEnd)));
         }
 
-        while (i.i < matches.length)
+        while (i < matches.length)
         {
-            var m = matches[i.i];
+            var m = matches[i];
             
-			if (m.elem != null && m.elem != '')
+			if (m.elem != null && m.elem != "")
             {
-				nodes.push(parseElement(str, matches, i));
+				nodes.push(parseElement());
             }
             else
-            if (m.script != null && m.script != '')
+            if (m.script != null && m.script != "")
             {
-                var scriptNode = new HtmlNodeElement('script', parseAttrs(m.scriptAttrs));
+                var scriptNode = newElement("script", parseAttrs(m.scriptAttrs));
                 scriptNode.addChild(new HtmlNodeText(m.scriptText));
                 nodes.push(scriptNode);
             }
             else
-            if (m.style != null && m.style != '')
+            if (m.style != null && m.style != "")
             {
-                var styleNode = new HtmlNodeElement('style', parseAttrs(m.styleAttrs));
+                var styleNode = newElement("style", parseAttrs(m.styleAttrs));
                 styleNode.addChild(new HtmlNodeText(m.styleText));
                 nodes.push(styleNode);
             }
             else
-            if (m.close != null && m.close != '') break;
+            if (m.close != null && m.close != "") break;
             else
-            if (m.comment != null && m.comment != '')
+            if (m.comment != null && m.comment != "")
             {
                 nodes.push(new HtmlNodeText(m.comment));
             }
@@ -134,32 +133,32 @@ class HtmlParser
                 throw("Error");
             }
             
-			var curEnd = matches[i.i].allPos + matches[i.i].all.length;
-            var nextStart = i.i + 1 < matches.length ? matches[i.i + 1].allPos : str.length;
+			var curEnd = matches[i].allPos + matches[i].all.length;
+            var nextStart = i + 1 < matches.length ? matches[i + 1].allPos : str.length;
             if (curEnd < nextStart)
             {
                 nodes.push(new HtmlNodeText(str.substr(curEnd, nextStart - curEnd)));
             }
 			
-			i.i++;
+			i++;
         }
 		
 		return nodes;
     }
-
-    private static function parseElement(str, matches:Array<HtmlLexem>, i:{i:Int}) : HtmlNodeElement
+	
+    function parseElement() : HtmlNodeElement
     {
-		var tag = matches[i.i].tagOpen;
-        var attrs = matches[i.i].attrs;
-        var isWithClose = matches[i.i].tagEnd != null && matches[i.i].tagEnd != "" || Reflect.hasField(selfClosingTags, tag);
+		var tag = matches[i].tagOpen;
+        var attrs = matches[i].attrs;
+        var isWithClose = matches[i].tagEnd != null && matches[i].tagEnd != "" || isSelfClosingTag(tag);
 		
         var elem = new HtmlNodeElement(tag, parseAttrs(attrs));
         if (!isWithClose)
         {
-            i.i++;
-            var nodes = parseInner(str, matches, i);
+            i++;
+            var nodes = processMatches();
             for (node in nodes) elem.addChild(node);
-            if (matches[i.i].close == null || matches[i.i].close == '' || matches[i.i].tagClose != tag)
+            if (matches[i].close == null || matches[i].close == "" || matches[i].tagClose != tag)
 			{
                 throw("XML parse error: tag <" + tag + "> not closed. ParsedText = \n<pre>" + str + "</pre>\n");
 			}
@@ -167,11 +166,15 @@ class HtmlParser
 
         return elem;
     }
-
-    private static function parseAttrs(str:String) : Array<HtmlAttribute>
+	
+	function isSelfClosingTag(tag:String) return Reflect.hasField(SELF_CLOSING_TAGS_HTML, tag);
+	
+	function newElement(name:String, attributes:Array<HtmlAttribute>) return new HtmlNodeElement(name, attributes);
+	
+    static function parseAttrs(str:String) : Array<HtmlAttribute>
     {
         var attributes = new Array<HtmlAttribute>();
-
+		
 		var pos = 0; while (pos < str.length && reParseAttrs.matchSub(str, pos))
         {
 			var name = reParseAttrs.matched(1);
@@ -183,20 +186,20 @@ class HtmlParser
 			}
 			else
 			{
-				quote = '';
+				quote = "";
 			}
 			attributes.push(new HtmlAttribute(name, value, quote));
 			
 			var p = reParseAttrs.matchedPos();
 			pos = p.pos + p.len;
         }
-
+		
         return attributes;
     }
     
-    public static function parseCssSelector(selector : String) : Array<Array<CssSelector>>
+    public static function parseCssSelector(selector:String) : Array<Array<CssSelector>>
     {
-		var reg = new EReg('\\s*,\\s*', "");
+		var reg = new EReg("\\s*,\\s*", "");
         var selectors = reg.split(selector);
         var r = [];
         for (s in selectors)
@@ -209,20 +212,20 @@ class HtmlParser
         return r;
     }
     
-    private static function parseCssSelectorInner(selector): Array<CssSelector>
+    static function parseCssSelectorInner(selector:String) : Array<CssSelector>
     {
-        var reSubSelector = '[.#]?' + reID + '(?::' + reID + ')?';
+        var reSubSelector = "[.#]?" + reID + "(?::" + reID + ")?";
         
         var parsedSelectors = [];
 		var reg = new EReg("([ >])((?:" + reSubSelector + ")+|[*])", "i");
 		
-		var strSelector = ' ' + selector;
+		var strSelector = " " + selector;
         while (reg.match(strSelector))
         {
 			var tags = [];
 			var ids = [];
 			var classes = [];
-			if (reg.matched(2) != '*')
+			if (reg.matched(2) != "*")
 			{
 				var subreg : EReg = new EReg(reSubSelector, "i");
 				var substr = reg.matched(2);
@@ -255,4 +258,6 @@ class HtmlParser
         }
         return parsedSelectors;
     }
+	
+	static inline function getMatched(re:EReg, n:Int) return try re.matched(n) catch (_:Dynamic) null;
 }

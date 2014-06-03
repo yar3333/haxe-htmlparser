@@ -2,9 +2,9 @@
 <project version="2">
   <!-- Output SWF options -->
   <output>
-    <movie outputType="Application" />
+    <movie outputType="CustomBuild" />
     <movie input="" />
-    <movie path="bin\index.n" />
+    <movie path="" />
     <movie fps="0" />
     <movie width="0" />
     <movie height="0" />
@@ -15,8 +15,8 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="library" />
-    <class path="tests\src" />
+    <class path="..\library" />
+    <class path="src" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -33,19 +33,21 @@
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="tests\src\Main.hx" />
+    <compile path="src\Main.hx" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
     <hidden path="bin" />
-    <hidden path="library\library.zip" />
-    <hidden path="tests\bin" />
+    <hidden path="..\library\library.zip" />
     <hidden path="obj" />
+    <hidden path="Makefile" />
+    <hidden path="Makefile.platform" />
+    <hidden path="Makefile.test" />
   </hiddenPaths>
   <!-- Executed before build -->
   <preBuildCommand />
   <!-- Executed after build -->
-  <postBuildCommand alwaysRun="False" />
+  <postBuildCommand alwaysRun="False">make.cmd</postBuildCommand>
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
