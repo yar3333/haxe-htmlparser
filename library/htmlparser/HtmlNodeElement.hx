@@ -1,4 +1,4 @@
-package haxe.htmlparser;
+package htmlparser;
 
 import haxe.Serializer;
 import haxe.Unserializer;

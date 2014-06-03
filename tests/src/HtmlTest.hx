@@ -2,11 +2,11 @@ package;
 
 import haxe.Serializer;
 import haxe.Unserializer;
-import haxe.htmlparser.HtmlParser;
-import haxe.htmlparser.HtmlNodeElement;
-import haxe.htmlparser.HtmlNodeText;
-import haxe.htmlparser.HtmlDocument;
-import haxe.htmlparser.XmlDocument;
+import htmlparser.HtmlParser;
+import htmlparser.HtmlNodeElement;
+import htmlparser.HtmlNodeText;
+import htmlparser.HtmlDocument;
+import htmlparser.XmlDocument;
 
 #if sys
 import sys.io.File;
