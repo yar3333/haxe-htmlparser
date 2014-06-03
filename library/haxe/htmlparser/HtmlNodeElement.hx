@@ -242,8 +242,6 @@ class HtmlNodeElement extends HtmlNode
     
     public function replaceChild(node:HtmlNodeElement, newNode:HtmlNode)
     {
-		//newNode = Unserializer.run(newNode.serialize());
-        
 		newNode.parent = this;
         
         for (i in 0...nodes.length)
@@ -275,8 +273,6 @@ class HtmlNodeElement extends HtmlNode
     
     public function replaceChildWithInner(node:HtmlNodeElement,  nodeContainer:HtmlNodeElement)
     {
-        //nodeContainer : HtmlNodeElement = Unserializer.run(nodeContainer.serialize());
-        
         for (n in nodeContainer.nodes)
 		{
 			n.parent = this;
