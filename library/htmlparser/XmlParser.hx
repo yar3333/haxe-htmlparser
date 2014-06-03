@@ -1,7 +1,7 @@
-package haxe.htmlparser;
+package htmlparser;
 
-import haxe.htmlparser.HtmlAttribute;
-import haxe.htmlparser.HtmlNodeElement;
+import htmlparser.HtmlAttribute;
+import htmlparser.HtmlNodeElement;
 
 class XmlParser extends HtmlParser
 {

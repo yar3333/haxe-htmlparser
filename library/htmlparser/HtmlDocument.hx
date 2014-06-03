@@ -1,4 +1,4 @@
-package haxe.htmlparser;
+package htmlparser;
 
 class HtmlDocument extends HtmlNodeElement
 {
