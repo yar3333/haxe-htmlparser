@@ -1,11 +1,11 @@
 package haxe.htmlparser;
 
-class HtmlDocument extends HtmlNodeElement
+class XmlDocument extends XmlNodeElement
 {
     public function new(str="") : Void
     {
         super("", []);
-        var nodes = HtmlParser.run(str);
+        var nodes = XmlParser.run(str);
         for (node in nodes)
 		{
 			addChild(node);

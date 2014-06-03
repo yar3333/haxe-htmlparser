@@ -6,6 +6,7 @@ import haxe.htmlparser.HtmlParser;
 import haxe.htmlparser.HtmlNodeElement;
 import haxe.htmlparser.HtmlNodeText;
 import haxe.htmlparser.HtmlDocument;
+import haxe.htmlparser.XmlDocument;
 
 #if sys
 import sys.io.File;
@@ -15,7 +16,7 @@ class HtmlTest extends haxe.unit.TestCase
 {
     public function testText()
     {
-		var nodes = HtmlParser.parse("abc");
+		var nodes = HtmlParser.run("abc");
         this.assertEquals(1, nodes.length);
 
         var node = nodes[0];
@@ -25,7 +26,7 @@ class HtmlTest extends haxe.unit.TestCase
 
     public function testTagWithClose()
     {
-		var nodes = HtmlParser.parse("<br p=2 />");
+		var nodes = HtmlParser.run("<br p=2 />");
         this.assertEquals(1, nodes.length);
 
 		this.assertTrue(Type.getClass(nodes[0]) == HtmlNodeElement);
@@ -38,7 +39,7 @@ class HtmlTest extends haxe.unit.TestCase
 
     public function testTagAndText()
     {
-        var nodes = HtmlParser.parse("<a>abc</a>");
+        var nodes = HtmlParser.run("<a>abc</a>");
         this.assertEquals(1, nodes.length);
 
 		this.assertTrue(Type.getClass(nodes[0]) == HtmlNodeElement);
@@ -49,7 +50,7 @@ class HtmlTest extends haxe.unit.TestCase
 
     public function getParsedAsString(str:String) : String
     {
-        var nodes = HtmlParser.parse(str);
+        var nodes = HtmlParser.run(str);
         return nodes.join("");
     }
 
@@ -77,7 +78,7 @@ class HtmlTest extends haxe.unit.TestCase
 
     public function testComment()
     {
-        var nodes = HtmlParser.parse("<a><!-- comment<p></p> --></a>");
+        var nodes = HtmlParser.run("<a><!-- comment<p></p> --></a>");
         this.assertEquals(1, nodes.length);
         this.assertTrue(Type.getClass(nodes[0]) == HtmlNodeElement);
         
@@ -277,6 +278,34 @@ class HtmlTest extends haxe.unit.TestCase
 		
 		r = xml.find("a");
 		assertEquals(1, r.length);
+	}
+	
+	public function testXmlA()
+	{
+		try
+		{
+			new HtmlDocument("<root><link></link></root>");
+		}
+		catch (_:Dynamic)
+		{
+			assertTrue(true);
+			return;
+		}
+		assertTrue(false);
+	}
+	
+	public function testXmlB()
+	{
+		try
+		{
+			new XmlDocument("<root><link></link></root>");
+		}
+		catch (_:Dynamic)
+		{
+			assertTrue(false);
+			return;
+		}
+		assertTrue(true);
 	}
 	
 	/*
