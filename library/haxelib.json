@@ -4,8 +4,8 @@
   "tags": ["cross","html","xml","parser"],
   "description": "Simple crossplatform HTML/XML parser with css-like selectors support (see find() method).",
   "contributors": ["yar3333"],
-  "releasenote": "Speed optimizations.",
-  "version": "1.8.5",
+  "releasenote": "Improve XML parsing support. Package 'haxe.htmlparser' now just 'htmlparser'.",
+  "version": "2.0.0",
   "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
   "dependencies": {}
 }
