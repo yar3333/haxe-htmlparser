@@ -5,7 +5,7 @@
   "description": "Simple crossplatform HTML/XML parser with css-like selectors support (see find() method).",
   "contributors": ["yar3333"],
   "releasenote": "Refactored. Added XML support (avoid tags self-closing in XML mode).",
-  "version": "1.9.0",
+  "version": "2.0.0",
   "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
   "dependencies": {}
 }
