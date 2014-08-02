@@ -197,10 +197,7 @@ class HtmlNodeElement extends HtmlNode
     
     private function findInner(selectors:Array<CssSelector>) : Array<HtmlNodeElement>
     {
-        if (selectors.length == 0)
-		{
-			return [];
-		}
+		if (selectors.length == 0) return [];
         
         var nodes = [];
         if (selectors[0].type == ' ') 
@@ -210,25 +207,24 @@ class HtmlNodeElement extends HtmlNode
                 nodes = nodes.concat(child.findInner(selectors));
             }
         }
-		
         if (isSelectorTrue(selectors[0]))
         {
-            if (selectors.length == 1)
+            if (selectors.length > 1)
             {
+                var subSelectors = selectors.slice(1);
+                for (child in children) 
+                {
+                    nodes = nodes.concat(child.findInner(subSelectors));
+                }                    
+            }
+			else
+			if (selectors.length == 1)
+			{
                 if (this.parent != null)
 				{
 					nodes.push(this);
 				}
-
-            }
-            else
-            {
-                selectors.shift();
-                for (child in children) 
-                {
-                    nodes = nodes.concat(child.findInner(selectors));
-                }                    
-            }
+			}
         }
         return nodes;
     }
