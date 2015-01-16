@@ -25,6 +25,8 @@ class HtmlParser
     
 	static var reID = "[a-z](?:-?[_a-z0-9])*";
 	static var reNamespacedID = reID + "(?::" + reID + ")?";
+	
+	static var reCDATA = "[<]!\\[CDATA\\[[\\s\\S]*?\\]\\][>]";
 	static var reScript = "[<]\\s*script\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*script\\s*>";
 	static var reStyle = "<\\s*style\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*style\\s*>";
 	static var reElementOpen = "<\\s*(" + reNamespacedID + ")";
@@ -33,7 +35,7 @@ class HtmlParser
 	static var reElementClose = "<\\s*/\\s*(" + reNamespacedID + ")\\s*>";
 	static var reComment = "<!--[\\s\\S]*?-->";
 	
-	static var reMain = new EReg("(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")", "i");
+	static var reMain = new EReg("(" + reCDATA + ")|(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")", "i");
 	
 	static var reParseAttrs = new EReg("(" + reID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
 	
@@ -51,24 +53,28 @@ class HtmlParser
 		var pos = 0; while (pos < str.length && reMain.matchSub(str, pos))
 		{
 			var p = reMain.matchedPos();
-			var r = {
-				 all : reMain.matched(0)
-				,allPos : p.pos
-				,script : getMatched(reMain, 1)
-				,scriptAttrs : getMatched(reMain, 2)
-				,scriptText : getMatched(reMain, 3)
-				,style : getMatched(reMain, 4)
-				,styleAttrs : getMatched(reMain, 5)
-				,styleText : getMatched(reMain, 6)
-				,elem : getMatched(reMain, 7)
-				,tagOpen : getMatched(reMain, 8)
-				,attrs : getMatched(reMain, 9)
-				,tagEnd : getMatched(reMain, 10)
-				,close : getMatched(reMain, 11)
-				,tagClose : getMatched(reMain, 12)
-				,comment : getMatched(reMain, 13)
-			};
-			matches.push(r);
+			var cdata = getMatched(reMain, 1);
+			if (cdata == null || cdata == "")
+			{
+				var r = {
+					 all : reMain.matched(0)
+					,allPos : p.pos
+					,script : getMatched(reMain, 2)
+					,scriptAttrs : getMatched(reMain, 3)
+					,scriptText : getMatched(reMain, 4)
+					,style : getMatched(reMain, 5)
+					,styleAttrs : getMatched(reMain, 6)
+					,styleText : getMatched(reMain, 7)
+					,elem : getMatched(reMain, 8)
+					,tagOpen : getMatched(reMain, 9)
+					,attrs : getMatched(reMain, 10)
+					,tagEnd : getMatched(reMain, 11)
+					,close : getMatched(reMain, 12)
+					,tagClose : getMatched(reMain, 13)
+					,comment : getMatched(reMain, 14)
+				};
+				matches.push(r);
+			}
 			pos = p.pos + p.len;
 		}
         
