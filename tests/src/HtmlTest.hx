@@ -244,7 +244,7 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals(3, xml.children.length);
 		assertEquals(3, xml.nodes.length);
 		
-		var nodes = xml.find(">a>b");
+		var nodes = xml.find(">b");
 		assertTrue(nodes != null);
 		assertTrue(nodes.length == 1);
 		nodes[0].remove();
