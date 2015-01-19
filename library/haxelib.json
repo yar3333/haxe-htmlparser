@@ -4,8 +4,8 @@
   "tags": ["cross","html","xml","parser"],
   "description": "Simple crossplatform HTML/XML parser with css-like selectors support (see find() method).",
   "contributors": ["yar3333"],
-  "releasenote": "Find in nested elements bugfix.",
-  "version": "2.0.2",
+  "releasenote": "CDATA support (these blocks threats as text).",
+  "version": "2.1.0",
   "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
   "dependencies": {}
 }
