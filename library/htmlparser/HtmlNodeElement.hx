@@ -3,6 +3,7 @@ package htmlparser;
 import haxe.Serializer;
 import haxe.Unserializer;
 
+#if jsprop @:build(JsProp.marked()) #end
 class HtmlNodeElement extends HtmlNode
 {
     public var name : String;
@@ -108,7 +109,7 @@ class HtmlNodeElement extends HtmlNode
 		
 		return null;
 	}
-
+	
     public function setAttribute(name:String, value:String)
     {
 		var nameLC = name.toLowerCase();
@@ -124,7 +125,7 @@ class HtmlNodeElement extends HtmlNode
         
         attributes.push(new HtmlAttribute(name, value, '"'));
     }
-
+	
     public function removeAttribute(name:String)
     {
 		var nameLC = name.toLowerCase();
@@ -139,7 +140,7 @@ class HtmlNodeElement extends HtmlNode
 			}
 		}
     }
-
+	
     public function hasAttribute(name:String) : Bool
     {
 		var nameLC = name.toLowerCase();
@@ -151,8 +152,9 @@ class HtmlNodeElement extends HtmlNode
 		
 		return false;
     }
-    
-    public var innerHTML(get_innerHTML, set_innerHTML) : String;
+	
+	@:property
+	public var innerHTML(get, set) : String;
 	
 	function set_innerHTML(value:String) : String
 	{

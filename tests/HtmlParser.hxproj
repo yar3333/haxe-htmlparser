@@ -47,7 +47,7 @@
   <!-- Executed before build -->
   <preBuildCommand />
   <!-- Executed after build -->
-  <postBuildCommand alwaysRun="False">make.cmd</postBuildCommand>
+  <postBuildCommand alwaysRun="False">make</postBuildCommand>
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
