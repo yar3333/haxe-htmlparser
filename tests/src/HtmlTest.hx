@@ -308,6 +308,23 @@ class HtmlTest extends haxe.unit.TestCase
 		assertTrue(true);
 	}
 	
+	public function testSerialization()
+	{
+		var text = "<root>text1<link>text2</link>text3</root>";
+		
+		var doc = new XmlDocument(text);
+		assertEquals(text, doc.innerHTML);
+		
+		#if (js && jsprop)
+			// innerHTML is native js property, so we not need to specify type for doc2	
+		var doc2 = Unserializer.run(Serializer.run(doc));
+		#else
+			// innerHTML is a haxe property, so we need to specify type to correct call get_innerHTML() in code below
+			var doc2 : XmlDocument = Unserializer.run(Serializer.run(doc));
+		#end
+		assertEquals(text, doc2.innerHTML);
+	}
+	
 	/*
 	#if sys
 	public function testSpeed()
