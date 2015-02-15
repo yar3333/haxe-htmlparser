@@ -21,7 +21,7 @@ private typedef HtmlLexem =
 
 class HtmlParser
 {
-    public static var SELF_CLOSING_TAGS_HTML(default, null) : Dynamic = { img:1, br:1, input:1, meta:1, link:1, hr:1, base:1, embed:1, spacer:1, source:1, params:1 };
+    public static var SELF_CLOSING_TAGS_HTML(default, null) : Dynamic = { img:1, br:1, input:1, meta:1, link:1, hr:1, base:1, embed:1, spacer:1, source:1, param:1 };
     
 	static var reID = "[a-z](?:-?[_a-z0-9])*";
 	static var reNamespacedID = reID + "(?::" + reID + ")?";
