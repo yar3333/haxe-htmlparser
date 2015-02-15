@@ -4,8 +4,8 @@
   "tags": ["cross","html","xml","parser"],
   "description": "Simple crossplatform HTML/XML parser with css-like selectors support (see find() method).",
   "contributors": ["yar3333"],
-  "releasenote": "Added HtmlParserTools to simplify getting attributes. Support native properties for js platform (when used with \"jsprop\" haxe library).",
-  "version": "2.1.1",
+  "releasenote": "* Self-close <param> tag (thanks to spayder26).",
+  "version": "2.1.2",
   "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
   "dependencies": {}
 }
