@@ -14,7 +14,7 @@ File.saveContent("myfile2.html", html.toString());
 ```
 
 ### Working with XML ###
-In XML mode parser is more strict: no self-closed tag allowed.
+In XML mode parser is more strict: there are no self-closed tags allowed.
 ```
 #!haxe
 var xml = new XmlDocument(File.getContent("myfile.xml"));
