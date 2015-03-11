@@ -174,6 +174,24 @@ class HtmlNodeElement extends HtmlNode
 		}
 		return r.toString();
     }
+	
+	@:property
+	public var innerText(get, never) : String;
+	
+	function get_innerText() : String
+    {
+		return toText();
+    }
+	
+	override function toText() : String
+	{
+		var r = new StringBuf();
+		for (node in nodes)
+		{
+			r.add(node.toText());
+		}
+		return r.toString();
+	}
     
     public function find(selector:String) : Array<HtmlNodeElement>
     {

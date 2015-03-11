@@ -325,6 +325,14 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals(text, doc2.innerHTML);
 	}
 	
+	public function testInnerText()
+	{
+		var text = "<root>text1<link>text2&amp;</link>te<![CDATA[4&amp;10]]>xt3</root>";
+		
+		var doc = new XmlDocument(text);
+		assertEquals("text1text2&te4&amp;10xt3", doc.innerText);
+	}
+	
 	/*
 	#if sys
 	public function testSpeed()
