@@ -37,6 +37,11 @@ class HtmlNode
 		return '';
 	}
 	
+	public function toText() : String
+	{
+		return '';
+	}
+	
 	function hxSerialize(s:Serializer)
 	{
 	}
