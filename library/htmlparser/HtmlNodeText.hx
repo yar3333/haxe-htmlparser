@@ -22,7 +22,7 @@ class HtmlNodeText extends HtmlNode
 	 */
 	override public function toText() : String
     {
-		return ~/[<]!\[CDATA\[((?:.|[\r\n])*?)\]\][>]|&[^;]+;/gs.map(text, function(re)
+		return ~/[<]!\[CDATA\[((?:.|[\r\n])*?)\]\][>]|&[^;]+;/g.map(text, function(re)
 		{
 			var s = re.matched(0);
 			if (s.charAt(0) == "&")
