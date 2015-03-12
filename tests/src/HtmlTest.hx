@@ -333,6 +333,14 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals("text1text2&te4&amp;10xt3", doc.innerText);
 	}
 	
+	public function testComplexAttr()
+	{
+		var text = "<root xlink:href='abc' />";
+		
+		var doc = new XmlDocument(text);
+		assertEquals("abc", doc.children[0].getAttribute("xlink:href"));
+	}
+	
 	/*
 	#if sys
 	public function testSpeed()
