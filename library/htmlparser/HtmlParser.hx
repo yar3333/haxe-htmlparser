@@ -1,6 +1,6 @@
 package htmlparser;
 
-#if unicode
+#if (neko && unicode)
 import unicode.EReg;
 #end
 
