@@ -1,5 +1,9 @@
 package htmlparser;
 
+#if unicode
+import unicode.EReg;
+#end
+
 private typedef HtmlLexem =
 {
 	var all : String;
