@@ -2,10 +2,7 @@ package htmlparser;
 
 class XmlNodeElement extends HtmlNodeElement
 {
-	public override function toString() : String
-    {
-		return toStringWithSelfClosingTags({});
-    }
+	override function isSelfClosing() return true;
 	
 	override function set_innerHTML(value:String) : String
 	{
