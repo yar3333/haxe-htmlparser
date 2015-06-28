@@ -69,11 +69,6 @@ class HtmlNodeElement extends HtmlNode
 	
 	public override function toString() : String
     {
-		return toStringWithSelfClosingTags(HtmlParser.SELF_CLOSING_TAGS_HTML);
-    }
-	
-    inline function toStringWithSelfClosingTags(selfClosingTags:Dynamic) : String
-	{
         var sAttrs = new StringBuf();
 		for (a in attributes)
 		{
@@ -81,22 +76,22 @@ class HtmlNodeElement extends HtmlNode
 			sAttrs.add(a.toString());
 		}
         
-        if (nodes.length == 0 && (Reflect.hasField(selfClosingTags, name) || name.indexOf(':') >= 0))
+		var innerBuf = new StringBuf();
+		for (node in nodes)
+		{
+			innerBuf.add(node.toString());
+		}
+		var inner = innerBuf.toString();
+		
+		if (inner == "" && isSelfClosing())
 		{
 			return "<" + name + sAttrs.toString() + " />";
 		}
 		
-		var sChildren = new StringBuf();
-		for (node in nodes)
-		{
-			sChildren.add(node.toString());
-		}
-		
-        return name != null && name != ''
-            ? "<" + name + sAttrs.toString() + ">" + sChildren.toString() + "</" + name + ">"
-            : sChildren.toString();
-		
-	}
+        return name != null && name != ""
+            ? "<" + name + sAttrs.toString() + ">" + inner + "</" + name + ">"
+            : inner;
+    }
 	
 	public function getAttribute(name:String) : String
 	{
@@ -364,6 +359,11 @@ class HtmlNodeElement extends HtmlNode
         children = [];
         addChild(new HtmlNodeText(text));
     }
+	
+	function isSelfClosing() : Bool
+	{
+		return Reflect.hasField(HtmlParser.SELF_CLOSING_TAGS_HTML, name) || name.indexOf(':') >= 0;
+	}
 	
 	override function hxSerialize(s:Serializer)
 	{
