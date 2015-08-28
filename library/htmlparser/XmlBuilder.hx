@@ -3,13 +3,15 @@ package htmlparser;
 class XmlBuilder
 {
 	var indent : String;
+	var newLine : String;
 	var cur : XmlNodeElement;
 	var level = 0;
 	public var xml : XmlDocument;
 	
-	public function new(indent="\t")
+	public function new(indent="\t", newLine="\n")
 	{
 		this.indent = indent;
+		this.newLine = newLine;
 		cur = xml = new XmlDocument();
 	}
 	
@@ -17,7 +19,10 @@ class XmlBuilder
 	{
 		if (indent != null)
 		{
-			if (level > 0) cur.addChild(new XmlNodeText("\n" + StringTools.rpad("", indent, level * indent.length)));
+			if (level > 0 || cur.nodes.length > 0)
+			{
+				cur.addChild(new XmlNodeText(newLine + StringTools.rpad("", indent, level * indent.length)));
+			}
 			level++;
 		}
 		
@@ -32,7 +37,7 @@ class XmlBuilder
 		if (indent != null)
 		{
 			level--;
-			if (cur.nodes.length > 0) cur.addChild(new XmlNodeText("\n" + StringTools.rpad("", indent, level * indent.length)));
+			if (cur.nodes.length > 0) cur.addChild(new XmlNodeText(newLine + StringTools.rpad("", indent, level * indent.length)));
 		}
 		
 		cur = (cast cur.parent : XmlNodeElement);
