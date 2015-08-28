@@ -14,7 +14,7 @@ class HtmlNodeElement extends HtmlNode
     public function getPrevSiblingElement() : HtmlNodeElement
     {
         if (parent == null) return null;
-        var n = indexOf(parent.children, this);
+        var n = parent.children.indexOf(this);
         if (n < 0) return null;
         if (n > 0) return parent.children[n - 1];
         return null;
@@ -23,7 +23,7 @@ class HtmlNodeElement extends HtmlNode
     public function getNextSiblingElement() : HtmlNodeElement
     {
         if (parent == null) return null;
-        var n = indexOf(parent.children, this);
+        var n = parent.children.indexOf(this);
         if (n < 0) return null;
         if (n + 1 < parent.children.length) return parent.children[n + 1];
         return null;
@@ -44,23 +44,23 @@ class HtmlNodeElement extends HtmlNode
 		if (beforeNode == null)
         {
             nodes.push(node);
-            if (Type.getClass(node) == HtmlNodeElement)
+            if (Std.is(node, HtmlNodeElement))
             {
-                children.push(cast(node, HtmlNodeElement));
+                children.push(cast node);
             }
         }
         else
         {
-            var n = indexOf(nodes, beforeNode);
+            var n = nodes.indexOf(beforeNode);
             if (n >= 0)
             {
                 nodes.insert(n, node);
-                if (Type.getClass(node) == HtmlNodeElement)
+                if (Std.is(node, HtmlNodeElement))
                 {
-                    n = indexOf(children, beforeNode);
+                    n = children.indexOf(cast beforeNode);
                     if (n >= 0)
                     {
-                        children.insert(n, cast(node, HtmlNodeElement));
+                        children.insert(n, cast node);
                     }
                 }
             }
@@ -200,7 +200,7 @@ class HtmlNodeElement extends HtmlNode
                 var nodesToAdd = node.findInner(s);
                 for (nodeToAdd in nodesToAdd)
                 {
-                    if (indexOf(resNodes, nodeToAdd) < 0)
+                    if (resNodes.indexOf(nodeToAdd) < 0)
                     {
                         resNodes.push(nodeToAdd);
                     }
@@ -215,7 +215,7 @@ class HtmlNodeElement extends HtmlNode
 		if (selectors.length == 0) return [];
         
         var nodes = [];
-        if (selectors[0].type == ' ') 
+        if (selectors[0].type == " ") 
         {
             for (child in children) 
             {
@@ -235,7 +235,7 @@ class HtmlNodeElement extends HtmlNode
 			else
 			if (selectors.length == 1)
 			{
-                if (this.parent != null)
+                if (parent != null)
 				{
 					nodes.push(this);
 				}
@@ -246,8 +246,8 @@ class HtmlNodeElement extends HtmlNode
     
     private function isSelectorTrue(selector:CssSelector)
     {
-        for (tag in selector.tags) if (this.name.toLowerCase() != tag) return false;
-        for (id in selector.ids) if (this.getAttribute('id') != id) return false;
+        for (tag in selector.tags) if (name.toLowerCase() != tag) return false;
+        for (id in selector.ids) if (getAttribute("id") != id) return false;
         for (clas in selector.classes) 
 		{
 			var reg = new EReg("(?:^|\\s)" + clas + "(?:$|\\s)", "");
@@ -260,32 +260,19 @@ class HtmlNodeElement extends HtmlNode
     public function replaceChild(node:HtmlNodeElement, newNode:HtmlNode)
     {
 		newNode.parent = this;
-        
-        for (i in 0...nodes.length)
-        {
-            if (nodes[i] == node)
-            {
-                nodes[i] = newNode;
-                break;
-            }
-        }
-        
-        var newNodeClass = Type.getClass(newNode);
-		for (i in 0...children.length)
-        {
-            if (children[i] == node)
-            {
-                if (newNodeClass == HtmlNodeElement)
-				{
-					children[i] = cast(newNode, HtmlNodeElement);
-				}
-				else
-				{
-					children.splice(i, 1);
-				}
-                break;
-            }
-        }
+		
+		var n = nodes.indexOf(node);
+		nodes[n] = newNode;
+		
+		var n = children.indexOf(node);
+		if (Std.is(newNode, HtmlNodeElement))
+		{
+			children[n] = cast newNode;
+		}
+		else
+		{
+			children.splice(n, 1);
+		}
     }
     
     public function replaceChildWithInner(node:HtmlNodeElement,  nodeContainer:HtmlNodeElement)
@@ -295,36 +282,24 @@ class HtmlNodeElement extends HtmlNode
 			n.parent = this;
 		}
         
-        for (i in 0...nodes.length)
-        {
-            if (nodes[i] == node)
-            {
-				var lastNodes = nodes.slice(i + 1, nodes.length);
-				nodes = (i != 0 ? nodes.slice(0, i) : []).concat(nodeContainer.nodes).concat(lastNodes);
-                break;
-            }
-        }
+        var n = nodes.indexOf(node);
+		var lastNodes = nodes.slice(n + 1, nodes.length);
+		nodes = (n != 0 ? nodes.slice(0, n) : []).concat(nodeContainer.nodes).concat(lastNodes);
         
-        for (i in 0...children.length)
-        {
-            if (children[i] == node)
-            {
-				var lastChildren = children.slice(i + 1, children.length);
-				children = (i != 0 ? children.slice(0, i) : []).concat(nodeContainer.children).concat(lastChildren);
-                break;
-            }
-        }
+        var n = children.indexOf(node);
+		var lastChildren = children.slice(n + 1, children.length);
+		children = (n != 0 ? children.slice(0, n) : []).concat(nodeContainer.children).concat(lastChildren);
     }
 	
 	public function removeChild(node:HtmlNode)
     {
-        var n = indexOf(nodes, node);
+        var n = nodes.indexOf(node);
         if (n >= 0) 
         {
             nodes.splice(n, 1);
-			if (Type.getClass(node) == HtmlNodeElement)
+			if (Std.is(node, HtmlNodeElement))
 			{
-				n = indexOf(children, node);
+				n = children.indexOf(cast node);
 				if (n >= 0 )
 				{
 					children.splice(n, 1);
@@ -362,7 +337,7 @@ class HtmlNodeElement extends HtmlNode
 	
 	function isSelfClosing() : Bool
 	{
-		return Reflect.hasField(HtmlParser.SELF_CLOSING_TAGS_HTML, name) || name.indexOf(':') >= 0;
+		return Reflect.hasField(HtmlParser.SELF_CLOSING_TAGS_HTML, name) || name.indexOf(":") >= 0;
 	}
 	
 	override function hxSerialize(s:Serializer)
@@ -385,13 +360,4 @@ class HtmlNodeElement extends HtmlNode
 			addChild(n);
 		}
     }
-	
-	static function indexOf(array:Array<Dynamic>, item:Dynamic) : Int
-	{
-		for (i in 0...array.length)
-		{
-			if (array[i] == item) return i;
-		}
-		return -1;
-	}
 }
