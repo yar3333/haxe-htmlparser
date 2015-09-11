@@ -162,7 +162,7 @@ class HtmlParser
         var attrs = matches[i].attrs;
         var isWithClose = matches[i].tagEnd != null && matches[i].tagEnd != "" || isSelfClosingTag(tag);
 		
-        var elem = new HtmlNodeElement(tag, parseAttrs(attrs));
+        var elem = newElement(tag, parseAttrs(attrs));
         if (!isWithClose)
         {
             i++;
