@@ -1,9 +1,9 @@
 # HtmlParser haxe library #
 
-Light and fast html/xml parser with jQuery-like find() method. Contains also XmlBuilder class to simple XML creating.
+Light and fast HTML/XML parser with a jQuery-like find() method. Also, contains a helper class to XML creating.
 
 ### Parsing HTML ###
-In HTML mode parser ignore DOCTYPE and assume some tags self-closed (for example, <img> parsed as <img />).
+In HTML mode parser ignore DOCTYPE and assume some tags self-closed (for example, `<img>` parsed as `<img />`).
 ```haxe
 var html = new HtmlDocument(File.getContent("myfile.html"));
 var titles = html.find(">html>head>title");
@@ -36,5 +36,5 @@ doc.begin("html");
 doc.end();
 
 trace(doc.xml.find(">html>head").length); // direct access to created XmlDocument
-trace(doc.toString()); // equ to `doc.xml.toString()`
+trace(doc.toString()); // equals to `doc.xml.toString()`
 ```

@@ -81,7 +81,7 @@ class HtmlParser
 			}
 			pos = p.pos + p.len;
 		}
-        
+		
 		if (matches.length > 0)
         {
 			this.str = str;
