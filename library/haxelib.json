@@ -2,7 +2,7 @@
   "name": "HtmlParser",
   "license": "LGPL",
   "tags": ["cross","html","xml","parser"],
-  "description": "Simple crossplatform HTML/XML parser with css-like selectors support (see find() method).",
+  "description": "Simple and fast crossplatform HTML/XML parser with a jQuery-like find() method. Also, contains a helper class to XML creating.",
   "contributors": ["yar3333"],
   "releasenote": "Improve README.",
   "version": "2.4.1",
