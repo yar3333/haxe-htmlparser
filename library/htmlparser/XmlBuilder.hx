@@ -1,5 +1,7 @@
 package htmlparser;
 
+using Lambda;
+
 class XmlBuilder
 {
 	var indent : String;
@@ -37,7 +39,10 @@ class XmlBuilder
 		if (indent != null)
 		{
 			level--;
-			if (cur.nodes.length > 0) cur.addChild(new XmlNodeText(newLine + StringTools.rpad("", indent, level * indent.length)));
+			if (cur.nodes.exists(function(e) return !Std.is(e, HtmlNodeText)))
+			{
+				cur.addChild(new XmlNodeText(newLine + StringTools.rpad("", indent, level * indent.length)));
+			}
 		}
 		
 		cur = (cast cur.parent : XmlNodeElement);
