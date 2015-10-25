@@ -4,8 +4,8 @@
   "tags": ["cross","html","xml","parser"],
   "description": "Simple and fast crossplatform HTML/XML parser with a jQuery-like find() method. Also, contains a helper class to XML creating.",
   "contributors": ["yar3333"],
-  "releasenote": "Improve README.",
-  "version": "2.4.2",
+  "releasenote": "XML builder: beauty output (stop adding new line and tabs if element contents children elements).",
+  "version": "2.4.3",
   "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
   "dependencies": {}
 }
