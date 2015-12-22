@@ -39,7 +39,7 @@ class HtmlParser
 	static var reElementClose = "<\\s*/\\s*(" + reNamespacedID + ")\\s*>";
 	static var reComment = "<!--[\\s\\S]*?-->";
 	
-	static var reMain = new EReg("(" + reCDATA + ")|(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")", "i");
+	static var reMain = new EReg("(" + reCDATA + ")|(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")", "ig");
 	
 	static var reParseAttrs = new EReg("(" + reNamespacedID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
 	
