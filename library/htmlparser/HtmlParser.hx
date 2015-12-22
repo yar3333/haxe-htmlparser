@@ -49,7 +49,7 @@ class HtmlParser
 	
 	public static function run(str:String) : Array<HtmlNode> return new HtmlParser().parse(str);
 	
-	function new() { }
+	function new() {}
 	
 	public function parse(str:String) : Array<HtmlNode>
     {
