@@ -151,15 +151,6 @@ class HtmlNodeElement extends HtmlNode
 	@:property
 	public var innerHTML(get, set) : String;
 	
-	function set_innerHTML(value:String) : String
-	{
-		var newNodes = HtmlParser.run(value);
-		nodes = [];
-		children = [];
-		for (node in newNodes) addChild(node);
-		return value;
-	}
-	
 	function get_innerHTML() : String
     {
 		var r = new StringBuf();
@@ -169,6 +160,15 @@ class HtmlNodeElement extends HtmlNode
 		}
 		return r.toString();
     }
+	
+	function set_innerHTML(value:String) : String
+	{
+		var newNodes = HtmlParser.run(value);
+		nodes = [];
+		children = [];
+		for (node in newNodes) addChild(node);
+		return value;
+	}
 	
 	@:property
 	public var innerText(get, never) : String;
