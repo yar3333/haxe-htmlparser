@@ -41,7 +41,7 @@ class HtmlParser
 	
 	static var reMain = new EReg("(" + reCDATA + ")|(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")", "ig");
 	
-	static var reParseAttrs = new EReg("(" + reNamespacedID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "i");
+	static var reParseAttrs = new EReg("(" + reNamespacedID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "ig");
 	
 	var matches : Array<HtmlLexem>;
 	var str : String;
