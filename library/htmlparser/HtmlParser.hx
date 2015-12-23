@@ -198,7 +198,7 @@ class HtmlParser
 			{
 				quote = "";
 			}
-			attributes.push(new HtmlAttribute(name, value, quote));
+			attributes.push(new HtmlAttribute(name, HtmlTools.unescape(value), quote));
 			
 			var p = reParseAttrs.matchedPos();
 			pos = p.pos + p.len;

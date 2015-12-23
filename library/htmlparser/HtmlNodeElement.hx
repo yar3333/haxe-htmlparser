@@ -171,11 +171,27 @@ class HtmlNodeElement extends HtmlNode
 	}
 	
 	@:property
-	public var innerText(get, never) : String;
+	public var innerText(get, set) : String;
 	
 	function get_innerText() : String
     {
 		return toText();
+    }
+	
+    function set_innerText(text:String) : String
+    {
+		fastSetInnerHTML(HtmlTools.escape(text));
+		return text;
+    }
+    
+	/**
+	 * Replace all inner nodes to the text node w/o escaping and parsing.
+	 */
+    public function fastSetInnerHTML(html:String)
+    {
+		nodes = [];
+		children = [];
+		addChild(new HtmlNodeText(html));
     }
 	
 	override function toText() : String
@@ -326,13 +342,6 @@ class HtmlNodeElement extends HtmlNode
             Reflect.setField(attrs, attr.name, attr.value);
         }
         return attrs;
-    }
-
-    public function setInnerText(text) : Void
-    {
-        nodes = [];
-        children = [];
-        addChild(new HtmlNodeText(text));
     }
 	
 	function isSelfClosing() : Bool
