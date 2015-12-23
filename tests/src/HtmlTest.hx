@@ -341,6 +341,23 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals("abc", doc.children[0].getAttribute("xlink:href"));
 	}
 	
+	public function testGetEscapedAttr()
+	{
+		var text = "<a href='abc&amp;def' />";
+		
+		var doc = new XmlDocument(text);
+		assertEquals("abc&def", doc.children[0].getAttribute("href"));
+	}
+	
+	public function testSetEscapedAttr()
+	{
+		var text = "<a />";
+		
+		var doc = new XmlDocument(text);
+		doc.children[0].setAttribute("href", "abc&def");
+		assertEquals("<a href=\"abc&amp;def\" />", doc.toString());
+	}
+	
 	/*
 	#if sys
 	public function testSpeed()

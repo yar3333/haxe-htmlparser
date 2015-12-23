@@ -15,6 +15,6 @@ class HtmlAttribute
     
 	public function toString()
     {
-        return name + "=" + quote + value + quote;
+        return name + "=" + quote + HtmlTools.escape(value, "\r\n" + (quote == "'" ? '"' : "'")) + quote;
     }
 }
