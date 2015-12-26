@@ -54,7 +54,7 @@ class XmlBuilder
 		if (value != null && (!Std.is(value, Float) || !Math.isNaN(value)) && value != defValue)
 		{
 			if (Std.is(value, Array)) value = value.join(",");
-			cur.setAttribute(name, value);
+			cur.setAttribute(name, Std.string(value));
 		}
 		return this;
 	}
