@@ -28,7 +28,7 @@ var doc = new XmlBuilder();
 doc.begin("html");
     doc.begin("head");
         doc.begin("title").content("This is a title").end();
-        doc.begin"meta")
+        doc.begin("meta")
 				.attr("content", "text/html; charset=UTF-8")
 				.attr("http-equiv", "content-type")
 			.end;
