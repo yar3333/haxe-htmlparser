@@ -8,6 +8,7 @@ private typedef HtmlLexem =
 {
 	var all : String;
 	var allPos : Int;
+	
 	var script : String;
 	var scriptAttrs : String;
 	var scriptText : String;
@@ -21,6 +22,9 @@ private typedef HtmlLexem =
 	var close : String;
 	var tagClose : String;
 	var comment : String;
+	
+	var tagOpenLC : String;
+	var tagCloseLC : String;
 }
 
 class HtmlParser
@@ -43,16 +47,19 @@ class HtmlParser
 	
 	static var reParseAttrs = new EReg("(" + reNamespacedID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "ig");
 	
+	var tolerant : Bool;
 	var matches : Array<HtmlLexem>;
 	var str : String;
 	var i : Int;
 	
-	public static function run(str:String) : Array<HtmlNode> return new HtmlParser().parse(str);
+	public static function run(str:String, tolerant=false) : Array<HtmlNode> return new HtmlParser().parse(str, tolerant);
 	
 	function new() {}
 	
-	public function parse(str:String) : Array<HtmlNode>
+	public function parse(str:String, tolerant=false) : Array<HtmlNode>
     {
+		this.tolerant = tolerant;
+		
 		matches = [];
 		var pos = 0; while (pos < str.length && reMain.matchSub(str, pos))
 		{
@@ -60,9 +67,11 @@ class HtmlParser
 			var cdata = getMatched(reMain, 1);
 			if (cdata == null || cdata == "")
 			{
-				var r = {
+				var r : HtmlLexem =
+				{
 					 all : reMain.matched(0)
 					,allPos : p.pos
+					
 					,script : getMatched(reMain, 2)
 					,scriptAttrs : getMatched(reMain, 3)
 					,scriptText : getMatched(reMain, 4)
@@ -76,7 +85,14 @@ class HtmlParser
 					,close : getMatched(reMain, 12)
 					,tagClose : getMatched(reMain, 13)
 					,comment : getMatched(reMain, 14)
+					
+					,tagOpenLC: null
+					,tagCloseLC: null
 				};
+				
+				if (r.tagOpen != null) r.tagOpenLC = r.tagOpen.toLowerCase();
+				if (r.tagClose != null) r.tagCloseLC = r.tagClose.toLowerCase();
+				
 				matches.push(r);
 			}
 			pos = p.pos + p.len;
@@ -86,10 +102,10 @@ class HtmlParser
         {
 			this.str = str;
 			this.i = 0;
-			var nodes = processMatches();
+			var nodes = processMatches("");
             if (i < matches.length)
 			{
-				throw("Error parsing XML at " + i + ":\n" + str);
+				throw "Error during parsing. Unparsed html:\n" + matches.slice(i).map(function(lexem) return lexem.all).join("");
 			}
             return nodes;
         }
@@ -97,7 +113,7 @@ class HtmlParser
         return str.length > 0 ? cast [ new HtmlNodeText(str) ] : [];
     }
 	
-	function processMatches() : Array<HtmlNode>
+	function processMatches(baseTagLC:String) : Array<HtmlNode>
     {
 		var nodes = new Array<HtmlNode>();
         
@@ -132,7 +148,11 @@ class HtmlParser
                 nodes.push(styleNode);
             }
             else
-            if (m.close != null && m.close != "") break;
+            if (m.close != null && m.close != "")
+			{
+				if (m.tagCloseLC == baseTagLC) break;
+				if (!tolerant && m.tagCloseLC != baseTagLC) throw "Closed tag <" + m.tagClose + "> don't match to open tag <" + baseTagLC + ">.";
+			}
             else
             if (m.comment != null && m.comment != "")
             {
@@ -140,8 +160,10 @@ class HtmlParser
             }
             else
             {
-                throw("Error");
+                throw "Error";
             }
+			
+			if (tolerant && i >= matches.length) break;
             
 			var curEnd = matches[i].allPos + matches[i].all.length;
             var nextStart = i + 1 < matches.length ? matches[i + 1].allPos : str.length;
@@ -159,18 +181,23 @@ class HtmlParser
     function parseElement() : HtmlNodeElement
     {
 		var tag = matches[i].tagOpen;
+		var tagLC = matches[i].tagOpenLC;
         var attrs = matches[i].attrs;
-        var isWithClose = matches[i].tagEnd != null && matches[i].tagEnd != "" || isSelfClosingTag(tag);
+        var isWithClose = matches[i].tagEnd != null && matches[i].tagEnd != "" || isSelfClosingTag(tagLC);
 		
         var elem = newElement(tag, parseAttrs(attrs));
         if (!isWithClose)
         {
             i++;
-            var nodes = processMatches();
+            var nodes = processMatches(tagLC);
             for (node in nodes) elem.addChild(node);
-            if (matches[i].close == null || matches[i].close == "" || matches[i].tagClose != tag)
+            
+			if (i < matches.length || !tolerant)
 			{
-                throw("XML parse error: tag <" + tag + "> not closed. ParsedText = \n<pre>" + str + "</pre>\n");
+				if (matches[i].close == null || matches[i].close == "" || matches[i].tagCloseLC != tagLC)
+				{
+					if (!tolerant) throw "XML parse error: tag <" + tag + "> not closed. ParsedText = \n<pre>" + str + "</pre>\n";
+				}
 			}
         }
 
