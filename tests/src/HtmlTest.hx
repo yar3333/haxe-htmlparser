@@ -48,9 +48,9 @@ class HtmlTest extends haxe.unit.TestCase
         this.assertEquals('a', node.name);
     }
 
-    public function getParsedAsString(str:String) : String
+    public function getParsedAsString(str:String, tolerant=false) : String
     {
-        var nodes = HtmlParser.run(str);
+        var nodes = HtmlParser.run(str, tolerant);
         return nodes.join("");
     }
 
@@ -89,13 +89,56 @@ class HtmlTest extends haxe.unit.TestCase
     }
     
     #if sys
-	public function testComplexParse()
+	public function testComplexParseA()
     {
-		var s = File.getContent('input.html');
-		File.saveContent("output.html", getParsedAsString(s));
-		assertEquals(s, File.getContent('output.html'));
+		var s = File.getContent('inputA.html');
+		File.saveContent("outputA.html", getParsedAsString(s));
+		assertEquals(s, File.getContent('outputA.html'));
+    }
+	
+	public function testComplexParseB()
+    {
+		var s = File.getContent('inputB.html');
+		var r = getParsedAsString(s, true);
+		assertTrue(r != null && r != "");
     }
 	#end
+	
+	public function testTolerantA()
+    {
+        assertEquals(getParsedAsString("<div><form></div>", true), "<div><form></form></div>");
+    }
+	
+	public function testTolerantB()
+    {
+        assertEquals(getParsedAsString("<div></form></div>", true), "<div></div>");
+    }
+	
+	public function testTolerantC()
+    {
+        assertEquals(getParsedAsString("<form><div></form></div>", true), "<form><div></div></form>");
+    }
+	
+	public function testNotTolerantA()
+    {
+        try getParsedAsString("<div><form></div>")
+		catch (_:Dynamic) { assertTrue(true); return; }
+		assertTrue(false);
+    }
+	
+	public function testNotTolerantB()
+    {
+        try getParsedAsString("<div></form></div>")
+		catch (_:Dynamic) { assertTrue(true); return; }
+		assertTrue(false);
+    }
+	
+	public function testNotTolerantC()
+    {
+        try getParsedAsString("<form><div></form></div>")
+		catch (_:Dynamic) { assertTrue(true); return; }
+		assertTrue(false);
+    }
     
     public function testSelectors()
     {
@@ -280,7 +323,7 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals(1, r.length);
 	}
 	
-	public function testXmlA()
+	public function testBadXml()
 	{
 		try
 		{
@@ -292,70 +335,6 @@ class HtmlTest extends haxe.unit.TestCase
 			return;
 		}
 		assertTrue(false);
-	}
-	
-	public function testXmlB()
-	{
-		try
-		{
-			new XmlDocument("<root><link></link></root>");
-		}
-		catch (_:Dynamic)
-		{
-			assertTrue(false);
-			return;
-		}
-		assertTrue(true);
-	}
-	
-	public function testSerialization()
-	{
-		var text = "<root>text1<link>text2</link>text3</root>";
-		
-		var doc = new XmlDocument(text);
-		assertEquals(text, doc.innerHTML);
-		
-		#if (js && jsprop)
-			// innerHTML is native js property, so we not need to specify type for doc2	
-		var doc2 = Unserializer.run(Serializer.run(doc));
-		#else
-			// innerHTML is a haxe property, so we need to specify type to correct call get_innerHTML() in code below
-			var doc2 : XmlDocument = Unserializer.run(Serializer.run(doc));
-		#end
-		assertEquals(text, doc2.innerHTML);
-	}
-	
-	public function testInnerText()
-	{
-		var text = "<root>text1<link>text2&amp;</link>te<![CDATA[4&amp;10]]>xt3</root>";
-		
-		var doc = new XmlDocument(text);
-		assertEquals("text1text2&te4&amp;10xt3", doc.innerText);
-	}
-	
-	public function testComplexAttr()
-	{
-		var text = "<root xlink:href='abc' />";
-		
-		var doc = new XmlDocument(text);
-		assertEquals("abc", doc.children[0].getAttribute("xlink:href"));
-	}
-	
-	public function testGetEscapedAttr()
-	{
-		var text = "<a href='abc&amp;def' />";
-		
-		var doc = new XmlDocument(text);
-		assertEquals("abc&def", doc.children[0].getAttribute("href"));
-	}
-	
-	public function testSetEscapedAttr()
-	{
-		var text = "<a />";
-		
-		var doc = new XmlDocument(text);
-		doc.children[0].setAttribute("href", "abc&def");
-		assertEquals("<a href=\"abc&amp;def\" />", doc.toString());
 	}
 	
 	/*

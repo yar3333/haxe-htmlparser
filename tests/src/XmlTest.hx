@@ -13,13 +13,27 @@ import sys.io.File;
 
 class XmlTest extends haxe.unit.TestCase
 {
-    #if sys
+	public function testGoodXml()
+	{
+		try
+		{
+			new XmlDocument("<root><link></link></root>");
+		}
+		catch (_:Dynamic)
+		{
+			assertTrue(false);
+			return;
+		}
+		assertTrue(true);
+	}
+    
+	#if sys
 	public function testComplexParse()
     {
-		var s = File.getContent("input.xml");
+		var s = File.getContent("inputA.xml");
 		var doc = new XmlDocument(s);
-		File.saveContent("output.xml", doc.toString());
-		assertEquals(s, File.getContent("output.xml"));
+		File.saveContent("outputA.xml", doc.toString());
+		assertEquals(s, File.getContent("outputA.xml"));
     }
 	#else
 	public function testComplexParse()
@@ -188,4 +202,54 @@ class XmlTest extends haxe.unit.TestCase
     }
 	
 	#end
+	
+	public function testSerialization()
+	{
+		var text = "<root>text1<link>text2</link>text3</root>";
+		
+		var doc = new XmlDocument(text);
+		assertEquals(text, doc.innerHTML);
+		
+		#if (js && jsprop)
+			// innerHTML is native js property, so we not need to specify type for doc2	
+		var doc2 = Unserializer.run(Serializer.run(doc));
+		#else
+			// innerHTML is a haxe property, so we need to specify type to correct call get_innerHTML() in code below
+			var doc2 : XmlDocument = Unserializer.run(Serializer.run(doc));
+		#end
+		assertEquals(text, doc2.innerHTML);
+	}
+	
+	public function testInnerText()
+	{
+		var text = "<root>text1<link>text2&amp;</link>te<![CDATA[4&amp;10]]>xt3</root>";
+		
+		var doc = new XmlDocument(text);
+		assertEquals("text1text2&te4&amp;10xt3", doc.innerText);
+	}
+	
+	public function testComplexAttr()
+	{
+		var text = "<root xlink:href='abc' />";
+		
+		var doc = new XmlDocument(text);
+		assertEquals("abc", doc.children[0].getAttribute("xlink:href"));
+	}
+	
+	public function testGetEscapedAttr()
+	{
+		var text = "<a href='abc&amp;def' />";
+		
+		var doc = new XmlDocument(text);
+		assertEquals("abc&def", doc.children[0].getAttribute("href"));
+	}
+	
+	public function testSetEscapedAttr()
+	{
+		var text = "<a />";
+		
+		var doc = new XmlDocument(text);
+		doc.children[0].setAttribute("href", "abc&def");
+		assertEquals("<a href=\"abc&amp;def\" />", doc.toString());
+	}
 }
