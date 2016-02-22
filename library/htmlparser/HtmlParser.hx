@@ -233,68 +233,6 @@ class HtmlParser
 		
         return attributes;
     }
-    
-    public static function parseCssSelector(selector:String) : Array<Array<CssSelector>>
-    {
-		var reg = new EReg("\\s*,\\s*", "");
-        var selectors = reg.split(selector);
-        var r = [];
-        for (s in selectors)
-        {
-            if (s != "")
-			{
-				r.push(parseCssSelectorInner(s));
-			}
-        }
-        return r;
-    }
-    
-    static function parseCssSelectorInner(selector:String) : Array<CssSelector>
-    {
-        var reSubSelector = "[.#]?" + reID + "(?::" + reID + ")?";
-        
-        var parsedSelectors = [];
-		var reg = new EReg("([ >])((?:" + reSubSelector + ")+|[*])", "i");
-		
-		var strSelector = " " + selector;
-        while (reg.match(strSelector))
-        {
-			var tags = [];
-			var ids = [];
-			var classes = [];
-			if (reg.matched(2) != "*")
-			{
-				var subreg : EReg = new EReg(reSubSelector, "i");
-				var substr = reg.matched(2);
-				try
-				{
-					while(subreg.match(substr))
-					{
-						var s = subreg.matched(0);
-						if      (s.substr(0, 1) == "#") ids.push(s.substr(1));
-						else if (s.substr(0, 1) == ".") classes.push(s.substr(1));
-						else                            tags.push((s.toLowerCase()));
-						substr = subreg.matchedRight();
-					}
-				}
-				catch (e:Dynamic)
-				{
-					#if neko
-					neko.Lib.println(substr);
-					#end
-					throw e;
-				}
-			}
-			parsedSelectors.push({ 
-				type:reg.matched(1), 
-				tags:tags, 
-				ids:ids, 
-				classes:classes
-			});
-			strSelector = reg.matchedRight();
-        }
-        return parsedSelectors;
-    }
 	
 	static inline function getMatched(re:EReg, n:Int) return try re.matched(n) catch (_:Dynamic) null;
 }
