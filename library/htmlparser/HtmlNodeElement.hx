@@ -206,7 +206,7 @@ class HtmlNodeElement extends HtmlNode
     
     public function find(selector:String) : Array<HtmlNodeElement>
     {
-        var parsedSelectors : Array<Array<CssSelector>> = HtmlParser.parseCssSelector(selector);
+        var parsedSelectors : Array<Array<CssSelector>> = CssSelector.parse(selector);
 
         var resNodes = new Array<HtmlNodeElement>();
         for (s in parsedSelectors)
