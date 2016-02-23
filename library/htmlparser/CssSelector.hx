@@ -9,9 +9,10 @@ class CssSelector
 	static var reSelector = "(\\s*)((?:[>]\\s*)?)([.#]?)(" + reNamespacedID + "|[*])((?:\\[\\d+\\])?)";
 	
 	public var type(default, null) : String;
-	public var tags(default, null) = new Array<{ name:String, index:Int }>();
-	public var ids(default, null) = new Array<String>();
+	public var tagNameLC(default, null) : String;
+	public var id(default, null) : String;
 	public var classes(default, null) = new Array<String>();
+	public var index(default, null) : Int;
 	
 	function new(type:String)
 	{
@@ -53,20 +54,17 @@ class CssSelector
 			var name = re.matched(4);
 			if (name != "*")
 			{
-					var s = re.matched(3);
-					if      (s == "#") r.ids.push(name);
-					else if (s == ".") r.classes.push(name);
-					else
-					{
-						var index : Int = null;
-						var sIndex = getMatched(re, 5);
-						if (sIndex != null && sIndex != "")
-						{
-							index = Std.parseInt(sIndex.substring(1, sIndex.length - 1));
-							if (Math.isNaN(index)) index = null;
-						}
-						r.tags.push({ name:name.toLowerCase(), index:index });
-					}
+				var s = re.matched(3);
+				if      (s == "#") r.id = name;
+				else if (s == ".") r.classes.push(name);
+				else r.tagNameLC = name.toLowerCase();
+				
+				var sIndex = getMatched(re, 5);
+				if (sIndex != null && sIndex != "")
+				{
+					r.index = Std.parseInt(sIndex.substring(1, sIndex.length - 1));
+					if (Math.isNaN(r.index)) r.index = null;
+				}
 			}
 			
 			var p = re.matchedPos();
