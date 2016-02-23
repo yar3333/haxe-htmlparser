@@ -262,7 +262,14 @@ class HtmlNodeElement extends HtmlNode
     
     private function isSelectorTrue(selector:CssSelector)
     {
-        for (tag in selector.tags) if (name.toLowerCase() != tag) return false;
+		for (tag in selector.tags)
+		{
+			if (name.toLowerCase() != tag.name) return false;
+			if (tag.index != null && (parent == null || parent.children.indexOf(this) + 1 != tag.index))
+			{
+				return false;
+			}
+		}
         for (id in selector.ids) if (getAttribute("id") != id) return false;
         for (clas in selector.classes) 
 		{

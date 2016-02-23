@@ -5,8 +5,11 @@ class CssSelector
 	static var reID = "[a-z](?:-?[_a-z0-9])*";
 	static var reNamespacedID = reID + "(?::" + reID + ")?";
 	
+	//                          1        2          3               4                      5
+	static var reSelector = "(\\s*)((?:[>]\\s*)?)([.#]?)(" + reNamespacedID + "|[*])((?:\\[\\d+\\])?)";
+	
 	public var type(default, null) : String;
-	public var tags(default, null) = new Array<String>();
+	public var tags(default, null) = new Array<{ name:String, index:Int }>();
 	public var ids(default, null) = new Array<String>();
 	public var classes(default, null) = new Array<String>();
 	
@@ -30,48 +33,50 @@ class CssSelector
 	
     static function parseInner(selector:String) : Array<CssSelector>
     {
-        var r = [];
-        
-		var reSubSelector = "[.#]?" + reNamespacedID;
+		var rr = [];
 		
-		var reg = new EReg("([ >])((?:" + reSubSelector + ")+|[*])", "i");
+		selector = " " + selector;
 		
-		var strSelector = " " + selector;
-        while (reg.match(strSelector))
-        {
-			var sel = new CssSelector(reg.matched(1));
-			
-			if (reg.matched(2) != "*")
+		var r : CssSelector = null;
+		var re = new EReg(reSelector, "gi");
+		var pos = 0;
+		while (re.matchSub(selector, pos))
+		{
+			var type1 = getMatched(re, 1); if (type1 == null) type1 = "";
+			var type2 = getMatched(re, 2); if (type2 == null) type2 = "";
+			if (type1.length > 0 || type2.length > 0)
 			{
-				var subreg : EReg = new EReg(reSubSelector, "i");
-				var substr = reg.matched(2);
-				try
-				{
-					while(subreg.match(substr))
-					{
-						var s = subreg.matched(0);
-						if      (s.substr(0, 1) == "#") sel.ids.push(s.substr(1));
-						else if (s.substr(0, 1) == ".") sel.classes.push(s.substr(1));
-						else                            sel.tags.push((s.toLowerCase()));
-						substr = subreg.matchedRight();
-					}
-				}
-				catch (e:Dynamic)
-				{
-					#if neko
-					neko.Lib.println(substr);
-					#end
-					throw e;
-				}
+				if (r != null) rr.push(r);
+				r = new CssSelector(type2.length > 0 ? ">" : " ");
 			}
 			
-			r.push(sel);
+			var name = re.matched(4);
+			if (name != "*")
+			{
+					var s = re.matched(3);
+					if      (s == "#") r.ids.push(name);
+					else if (s == ".") r.classes.push(name);
+					else
+					{
+						var index : Int = null;
+						var sIndex = getMatched(re, 5);
+						if (sIndex != null && sIndex != "")
+						{
+							index = Std.parseInt(sIndex.substring(1, sIndex.length - 1));
+							if (Math.isNaN(index)) index = null;
+						}
+						r.tags.push({ name:name.toLowerCase(), index:index });
+					}
+			}
 			
-			strSelector = reg.matchedRight();
-        }
+			var p = re.matchedPos();
+			pos = p.pos + p.len;
+		}
 		
-        return r;
+		if (r != null) rr.push(r);
+		
+		return rr;
     }
 	
-	static inline function getMatched(re:EReg, n:Int) return try re.matched(n) catch (_:Dynamic) null;
+	static inline function getMatched(re:EReg, n:Int) : String return try re.matched(n) catch (_:Dynamic) null;
 }
