@@ -262,22 +262,23 @@ class HtmlNodeElement extends HtmlNode
     
     private function isSelectorTrue(selector:CssSelector)
     {
-		for (tag in selector.tags)
-		{
-			if (name.toLowerCase() != tag.name) return false;
-			if (tag.index != null && (parent == null || parent.children.indexOf(this) + 1 != tag.index))
-			{
-				return false;
-			}
-		}
-        for (id in selector.ids) if (getAttribute("id") != id) return false;
-        for (clas in selector.classes) 
+		if (selector.tagNameLC != null && name.toLowerCase() != selector.tagNameLC) return false;
+        
+		if (selector.id != null && getAttribute("id") != selector.id) return false;
+        
+		for (clas in selector.classes) 
 		{
 			var reg = new EReg("(?:^|\\s)" + clas + "(?:$|\\s)", "");
             var classAttr = getAttribute("class");
 			if (classAttr == null || !reg.match(classAttr)) return false;
 		}
-        return true;
+		
+		if (selector.index != null && (parent == null || parent.children.indexOf(this) + 1 != selector.index))
+		{
+			return false;
+		}
+        
+		return true;
     }
     
     public function replaceChild(node:HtmlNodeElement, newNode:HtmlNode)
