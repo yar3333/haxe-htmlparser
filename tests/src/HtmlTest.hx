@@ -225,6 +225,18 @@ class HtmlTest extends haxe.unit.TestCase
         
         nodes = xml.find('a, a');
         this.assertEquals(1, nodes.length);
+        
+		nodes = xml.find('div>p>a[0]');
+        this.assertEquals(0, nodes.length);
+		
+		nodes = xml.find('div>p>a[1]');
+        this.assertEquals(1, nodes.length);
+		
+		nodes = xml.find('div>p>a[2]');
+        this.assertEquals(0, nodes.length);
+		
+		nodes = xml.find('div>p>a[3]');
+        this.assertEquals(0, nodes.length);
     }
 
     public function testSiblings()
