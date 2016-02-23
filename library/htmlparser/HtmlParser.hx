@@ -234,5 +234,5 @@ class HtmlParser
         return attributes;
     }
 	
-	static inline function getMatched(re:EReg, n:Int) return try re.matched(n) catch (_:Dynamic) null;
+	static inline function getMatched(re:EReg, n:Int) : String return try re.matched(n) catch (_:Dynamic) null;
 }
