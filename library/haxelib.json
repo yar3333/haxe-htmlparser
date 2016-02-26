@@ -4,8 +4,8 @@
   "tags": ["cross","html","xml","parser"],
   "description": "Simple and fast crossplatform HTML/XML parser with a jQuery-like find() method. Also, contains a helper class to XML creating.",
   "contributors": ["yar3333"],
-  "releasenote": "Attributes are always automatically escaped/unescaped. HtmlNodeElement: `setInnerText()` renamed to `fastSetInnerHTML()`. XmlBuilder bugfix.",
-  "version": "3.0.0",
+  "releasenote": "Added 'tolerant' mode (to parse bad html). Support indexes in selectors (like \"div>p[2]\").",
+  "version": "3.1.0",
   "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
   "dependencies": {}
 }
