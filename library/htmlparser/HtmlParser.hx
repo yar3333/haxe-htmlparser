@@ -105,7 +105,7 @@ class HtmlParser
 			var nodes = processMatches("");
             if (i < matches.length)
 			{
-				throw "Error during parsing. Unparsed html:\n" + matches.slice(i).map(function(lexem) return lexem.all).join("");
+				throw new XmlParserException("Not all nodes processed.", getPosition(i));
 			}
             return nodes;
         }
@@ -151,7 +151,10 @@ class HtmlParser
             if (m.close != null && m.close != "")
 			{
 				if (m.tagCloseLC == baseTagLC) break;
-				if (!tolerant && m.tagCloseLC != baseTagLC) throw "Closed tag <" + m.tagClose + "> don't match to open tag <" + baseTagLC + ">.";
+				if (!tolerant && m.tagCloseLC != baseTagLC)
+				{
+					throw new XmlParserException("Closed tag <" + m.tagClose + "> don't match to open tag <" + baseTagLC + ">.", getPosition(i));
+				}
 			}
             else
             if (m.comment != null && m.comment != "")
@@ -160,7 +163,7 @@ class HtmlParser
             }
             else
             {
-                throw "Error";
+                throw new XmlParserException("Unexpected XML node.", getPosition(i));
             }
 			
 			if (tolerant && i >= matches.length) break;
@@ -196,7 +199,7 @@ class HtmlParser
 			{
 				if (matches[i].close == null || matches[i].close == "" || matches[i].tagCloseLC != tagLC)
 				{
-					if (!tolerant) throw "XML parse error: tag <" + tag + "> not closed. ParsedText = \n<pre>" + str + "</pre>\n";
+					if (!tolerant) throw new XmlParserException("Tag <" + tag + "> not closed.", getPosition(i));
 				}
 			}
         }
@@ -233,6 +236,36 @@ class HtmlParser
 		
         return attributes;
     }
+	
+	function getPosition(matchIndex:Int) : { line:Int, column:Int, length:Int }
+	{
+		var m = matches[matchIndex];
+		var line = 1;
+		var lastNewLinePos = -1;
+		var i = 0; while (i < m.allPos)
+		{
+			var chars = i + 1 < str.length ? str.substring(i, i + 2) : str.charAt(i);
+			if (chars == "\r\n")
+			{
+				i += 2;
+				lastNewLinePos = i;
+				line++;
+			}
+			else
+			if (chars.charAt(0) == "\n" || chars.charAt(0) == "\r")
+			{
+				i++;
+				lastNewLinePos = i;
+				line++;
+			}
+			else
+			{
+				i++;
+			}
+		}
+		
+		return { line:line, column:m.allPos - lastNewLinePos, length:m.all.length };
+	}
 	
 	static inline function getMatched(re:EReg, n:Int) : String return try re.matched(n) catch (_:Dynamic) null;
 }
