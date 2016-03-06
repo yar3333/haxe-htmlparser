@@ -105,7 +105,7 @@ class HtmlParser
 			var nodes = processMatches("");
             if (i < matches.length)
 			{
-				throw new XmlParserException("Not all nodes processed.", getPosition(i));
+				throw new HtmlParserException("Not all nodes processed.", getPosition(i));
 			}
             return nodes;
         }
@@ -153,7 +153,7 @@ class HtmlParser
 				if (m.tagCloseLC == baseTagLC) break;
 				if (!tolerant && m.tagCloseLC != baseTagLC)
 				{
-					throw new XmlParserException("Closed tag <" + m.tagClose + "> don't match to open tag <" + baseTagLC + ">.", getPosition(i));
+					throw new HtmlParserException("Closed tag <" + m.tagClose + "> don't match to open tag <" + baseTagLC + ">.", getPosition(i));
 				}
 			}
             else
@@ -163,7 +163,7 @@ class HtmlParser
             }
             else
             {
-                throw new XmlParserException("Unexpected XML node.", getPosition(i));
+                throw new HtmlParserException("Unexpected XML node.", getPosition(i));
             }
 			
 			if (tolerant && i >= matches.length) break;
@@ -199,7 +199,7 @@ class HtmlParser
 			{
 				if (matches[i].close == null || matches[i].close == "" || matches[i].tagCloseLC != tagLC)
 				{
-					if (!tolerant) throw new XmlParserException("Tag <" + tag + "> not closed.", getPosition(i));
+					if (!tolerant) throw new HtmlParserException("Tag <" + tag + "> not closed.", getPosition(i));
 				}
 			}
         }
