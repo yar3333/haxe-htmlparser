@@ -1,6 +1,6 @@
 package htmlparser;
 
-class XmlParserException
+class HtmlParserException
 {
 	public var message : String;
 	
