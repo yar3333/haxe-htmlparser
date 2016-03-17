@@ -12,6 +12,15 @@ titles[0].innerHTML = "My New Title";
 File.saveContent("myfile2.html", html.toString());
 ```
 
+#### Tolerant Mode ####
+
+To parse bad HTML you can use "tolerant" parser's mode:
+```haxe
+var html1 = new HtmlDocument("<div><a>Link</div></a>"); // wrong close tags sequence
+var html2 = new HtmlDocument("<div><a>Link</div>"); // missing close tag <a>
+```
+
+
 ### Parsing XML ###
 In XML mode parser is more strict: there are no self-closed tags allowed.
 ```haxe
@@ -21,6 +30,7 @@ trace(contents[0].innerHTML);
 contents[0].innerHTML = "New content for first item";
 File.saveContent("myfile2.xml", xml.toString());
 ```
+
 
 ### XML building ###
 ```haxe
