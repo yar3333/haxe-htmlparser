@@ -16,8 +16,8 @@ File.saveContent("myfile2.html", html.toString());
 
 To parse bad HTML you can use "tolerant" parser's mode:
 ```haxe
-var html1 = new HtmlDocument("<div><a>Link</div></a>"); // wrong close tags sequence
-var html2 = new HtmlDocument("<div><a>Link</div>"); // missing close tag <a>
+var html1 = new HtmlDocument("<div><a>Link</div></a>", true); // wrong close tags sequence
+var html2 = new HtmlDocument("<div><a>Link</div>", true); // missing '</a>'
 ```
 
 
