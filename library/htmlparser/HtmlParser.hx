@@ -102,7 +102,7 @@ class HtmlParser
         {
 			this.str = str;
 			this.i = 0;
-			var nodes = processMatches("");
+			var nodes = processMatches([]).nodes;
             if (i < matches.length)
 			{
 				throw new HtmlParserException("Not all nodes processed.", getPosition(i));
@@ -113,7 +113,7 @@ class HtmlParser
         return str.length > 0 ? cast [ new HtmlNodeText(str) ] : [];
     }
 	
-	function processMatches(baseTagLC:String) : Array<HtmlNode>
+	function processMatches(openedTagsLC:Array<String>) : { nodes:Array<HtmlNode>, closeTagLC:String }
     {
 		var nodes = new Array<HtmlNode>();
         
@@ -131,7 +131,9 @@ class HtmlParser
             
 			if (m.elem != null && m.elem != "")
             {
-				nodes.push(parseElement());
+				var ee = parseElement(openedTagsLC);
+				nodes.push(ee.element);
+				if (ee.closeTagLC != "") return { nodes:nodes, closeTagLC:ee.closeTagLC };
             }
             else
             if (m.script != null && m.script != "")
@@ -150,10 +152,14 @@ class HtmlParser
             else
             if (m.close != null && m.close != "")
 			{
-				if (m.tagCloseLC == baseTagLC) break;
-				if (!tolerant && m.tagCloseLC != baseTagLC)
+				if (m.tagCloseLC == openedTagsLC[openedTagsLC.length - 1]) break;
+				if (tolerant)
 				{
-					throw new HtmlParserException("Closed tag <" + m.tagClose + "> don't match to open tag <" + baseTagLC + ">.", getPosition(i));
+					if (openedTagsLC.lastIndexOf(m.tagCloseLC) >= 0) break;
+				}
+				else
+				{
+					throw new HtmlParserException("Closed tag <" + m.tagClose + "> don't match to open tag <" + openedTagsLC[openedTagsLC.length - 1] + ">.", getPosition(i));
 				}
 			}
             else
@@ -178,10 +184,10 @@ class HtmlParser
 			i++;
         }
 		
-		return nodes;
+		return { nodes:nodes, closeTagLC:"" };
     }
 	
-    function parseElement() : HtmlNodeElement
+    function parseElement(openedTagsLC:Array<String>) : { element:HtmlNodeElement, closeTagLC:String }
     {
 		var tag = matches[i].tagOpen;
 		var tagLC = matches[i].tagOpenLC;
@@ -189,22 +195,29 @@ class HtmlParser
         var isWithClose = matches[i].tagEnd != null && matches[i].tagEnd != "" || isSelfClosingTag(tagLC);
 		
         var elem = newElement(tag, parseAttrs(attrs));
+		var closeTagLC = "";
         if (!isWithClose)
         {
             i++;
-            var nodes = processMatches(tagLC);
-            for (node in nodes) elem.addChild(node);
+			
+			openedTagsLC.push(tagLC);
+			var m = processMatches(openedTagsLC);
+			for (node in m.nodes) elem.addChild(node);
+			openedTagsLC.pop();
+			
+			closeTagLC = m.closeTagLC != tagLC ? m.closeTagLC : "";
             
 			if (i < matches.length || !tolerant)
 			{
 				if (matches[i].close == null || matches[i].close == "" || matches[i].tagCloseLC != tagLC)
 				{
 					if (!tolerant) throw new HtmlParserException("Tag <" + tag + "> not closed.", getPosition(i));
+					else closeTagLC = matches[i].tagCloseLC;
 				}
 			}
         }
-
-        return elem;
+		
+        return { element:elem, closeTagLC:closeTagLC };
     }
 	
 	function isSelfClosingTag(tag:String) return Reflect.hasField(SELF_CLOSING_TAGS_HTML, tag);

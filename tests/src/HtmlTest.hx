@@ -14,7 +14,13 @@ import sys.io.File;
 
 class HtmlTest extends haxe.unit.TestCase
 {
-    public function testText()
+    public function getParsedAsString(str:String, tolerant=false) : String
+    {
+        var nodes = HtmlParser.run(str, tolerant);
+        return nodes.join("");
+    }
+    
+	public function testText()
     {
 		var nodes = HtmlParser.run("abc");
         this.assertEquals(1, nodes.length);
@@ -46,12 +52,6 @@ class HtmlTest extends haxe.unit.TestCase
 		
         var node : HtmlNodeElement = cast nodes[0];
         this.assertEquals('a', node.name);
-    }
-
-    public function getParsedAsString(str:String, tolerant=false) : String
-    {
-        var nodes = HtmlParser.run(str, tolerant);
-        return nodes.join("");
     }
 
     public function testSimpleConvertDeconvert()
@@ -106,17 +106,26 @@ class HtmlTest extends haxe.unit.TestCase
 	
 	public function testTolerantA()
     {
-        assertEquals(getParsedAsString("<div><form></div>", true), "<div><form></form></div>");
+        assertEquals("<div><form></form></div>", getParsedAsString("<div><form></div>", true));
     }
 	
 	public function testTolerantB()
     {
-        assertEquals(getParsedAsString("<div></form></div>", true), "<div></div>");
+        assertEquals("<div></div>", getParsedAsString("<div></form></div>", true));
     }
 	
 	public function testTolerantC()
     {
-        assertEquals(getParsedAsString("<form><div></form></div>", true), "<form><div></div></form>");
+        assertEquals("<form><div></div></form>", getParsedAsString("<form><div></form></div>", true));
+    }
+	
+	public function testTolerantD()
+    {
+        assertEquals
+		(
+			                  "<div><dl><dd>D</dd></dl><a>A</a></div>",
+			getParsedAsString("<div><dl><dd>D</dl><a>A</a></div>", true)
+		);
     }
 	
 	public function testNotTolerantA()
@@ -335,7 +344,7 @@ class HtmlTest extends haxe.unit.TestCase
 		assertEquals(1, r.length);
 	}
 	
-	public function testBadXml()
+	public function testBadXmlA()
 	{
 		try
 		{
