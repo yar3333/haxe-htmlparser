@@ -12,7 +12,7 @@ class CssSelector
 	public var tagNameLC(default, null) : String;
 	public var id(default, null) : String;
 	public var classes(default, null) = new Array<String>();
-	public var index(default, null) : Int;
+	public var index(default, null) : Null<Int>;
 	
 	function new(type:String)
 	{
