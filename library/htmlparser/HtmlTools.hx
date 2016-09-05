@@ -136,8 +136,18 @@ class HtmlTools
 			var s = re.matched(0);
 			if (s.charAt(0) == "&")
 			{
-				var r = htmlUnescapeMap.get(s.substring(1, s.length - 1));
-				return r != null ? r : s;
+				if (s.charAt(1) == "#")
+				{
+					var numbers = s.substring(2, s.length - 1);
+					if (numbers.charAt(0) == "x") numbers = "0" + numbers;
+					var code = Std.parseInt(numbers);
+					return code != null && code != 0 ? String.fromCharCode(code) : s;
+				}
+				else
+				{
+					var r = htmlUnescapeMap.get(s.substring(1, s.length - 1));
+					return r != null ? r : s;
+				}
 			}
 			return re.matched(1);
 		});
