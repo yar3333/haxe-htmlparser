@@ -66,6 +66,33 @@ class HtmlNodeElement extends HtmlNode
             }
         }
     }
+    
+	public function addChildren(nodesToAdd:Array<HtmlNode>, beforeNode:HtmlNode=null) : Void
+    {
+		for (node in nodesToAdd) node.parent = this;
+		
+		if (beforeNode == null)
+        {
+			for (node in nodesToAdd) addChild(node);
+        }
+        else
+        {
+            var n = nodes.indexOf(beforeNode);
+            if (n >= 0)
+            {
+                nodes = nodes.slice(0, n).concat(nodesToAdd).concat(nodes.slice(n));
+                var elems = nodesToAdd.filter(function(e) return Std.is(e, HtmlNodeElement)).map(function(e) return (cast e:HtmlNodeElement));
+                if (elems.length > 0)
+                {
+                    n = children.indexOf(cast beforeNode);
+                    if (n >= 0)
+                    {
+						children = children.slice(0, n).concat(elems).concat(children.slice(n));
+                    }
+                }
+            }
+        }
+	}    
 	
 	public override function toString() : String
     {
