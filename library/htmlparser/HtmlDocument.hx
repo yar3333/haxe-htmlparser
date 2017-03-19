@@ -8,7 +8,7 @@ class HtmlDocument extends HtmlNodeElement
         var nodes = HtmlParser.run(str, tolerant);
         for (node in nodes)
 		{
-			addNode(node);
+			addChild(node);
 		}
     }
 }
