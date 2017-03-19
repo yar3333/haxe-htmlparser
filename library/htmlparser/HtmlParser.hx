@@ -139,14 +139,14 @@ class HtmlParser
             if (m.script != null && m.script != "")
             {
                 var scriptNode = newElement("script", parseAttrs(m.scriptAttrs));
-                scriptNode.addNode(new HtmlNodeText(m.scriptText));
+                scriptNode.addChild(new HtmlNodeText(m.scriptText));
                 nodes.push(scriptNode);
             }
             else
             if (m.style != null && m.style != "")
             {
                 var styleNode = newElement("style", parseAttrs(m.styleAttrs));
-                styleNode.addNode(new HtmlNodeText(m.styleText));
+                styleNode.addChild(new HtmlNodeText(m.styleText));
                 nodes.push(styleNode);
             }
             else
@@ -202,7 +202,7 @@ class HtmlParser
 			
 			openedTagsLC.push(tagLC);
 			var m = processMatches(openedTagsLC);
-			for (node in m.nodes) elem.addNode(node);
+			for (node in m.nodes) elem.addChild(node);
 			openedTagsLC.pop();
 			
 			closeTagLC = m.closeTagLC != tagLC ? m.closeTagLC : "";

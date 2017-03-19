@@ -37,7 +37,7 @@ class HtmlNodeElement extends HtmlNode
         this.children = [];
     }
 
-    public function addNode(node:HtmlNode, beforeNode:HtmlNode=null) : Void
+    public function addChild(node:HtmlNode, beforeNode:HtmlNode=null) : Void
     {
         node.parent = this;
         
@@ -66,33 +66,6 @@ class HtmlNodeElement extends HtmlNode
             }
         }
     }
-	
-    public function addNodes(nodesToAdd:Array<HtmlNode>, beforeNode:HtmlNode=null) : Void
-    {
-		for (node in nodesToAdd) node.parent = this;
-		
-		if (beforeNode == null)
-        {
-			for (node in nodesToAdd) addNode(node);
-        }
-        else
-        {
-            var n = nodes.indexOf(beforeNode);
-            if (n >= 0)
-            {
-                nodes = nodes.slice(0, n).concat(nodesToAdd).concat(nodes.slice(n));
-                var elems = nodesToAdd.filter(function(e) return Std.is(e, HtmlNodeElement)).map(function(e) return (cast e:HtmlNodeElement));
-                if (elems.length > 0)
-                {
-                    n = children.indexOf(cast beforeNode);
-                    if (n >= 0)
-                    {
-						children = children.slice(0, n).concat(elems).concat(children.slice(n));
-                    }
-                }
-            }
-        }
-	}
 	
 	public override function toString() : String
     {
@@ -193,7 +166,7 @@ class HtmlNodeElement extends HtmlNode
 		var newNodes = HtmlParser.run(value);
 		nodes = [];
 		children = [];
-		for (node in newNodes) addNode(node);
+		for (node in newNodes) addChild(node);
 		return value;
 	}
 	
@@ -218,7 +191,7 @@ class HtmlNodeElement extends HtmlNode
     {
 		nodes = [];
 		children = [];
-		addNode(new HtmlNodeText(html));
+		addChild(new HtmlNodeText(html));
     }
 	
 	override function toText() : String
@@ -401,7 +374,7 @@ class HtmlNodeElement extends HtmlNode
 		var ns : Array<HtmlNode> = s.unserialize();
 		for (n in ns)
 		{
-			addNode(n);
+			addChild(n);
 		}
     }
 }
