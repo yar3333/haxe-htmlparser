@@ -68,7 +68,7 @@ class HtmlNodeElement extends HtmlNode
     }
     
 	public function addChildren(nodesToAdd:Array<HtmlNode>, beforeNode:HtmlNode=null) : Void
-    {
+	{
 		for (node in nodesToAdd) node.parent = this;
 		
 		if (beforeNode == null)
@@ -88,10 +88,10 @@ class HtmlNodeElement extends HtmlNode
                     if (n >= 0)
                     {
 						children = children.slice(0, n).concat(elems).concat(children.slice(n));
-                    }
-                }
-            }
-        }
+					}
+				}
+			}
+		}
 	}    
 	
 	public override function toString() : String
