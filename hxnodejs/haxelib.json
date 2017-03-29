@@ -1,0 +1,11 @@
+{
+  "name": "hxnodejs-htmlparser",
+  "license": "LGPL",
+  "tags": ["cross","html","xml","parser"],
+  "description": "Simple and fast crossplatform HTML/XML parser with a jQuery-like find() method. Also, contains a helper class to XML creating.",
+  "contributors": ["yar3333"],
+  "releasenote": "Support unescaping char code. Changed CssSelector.index type from Int to Null<Int> to permit compilation on static platforms.",
+  "version": "3.2.3",
+  "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
+  "dependencies": {}
+}
