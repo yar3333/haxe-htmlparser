@@ -1,5 +1,5 @@
 PACKAGE = htmlparser
-LIBRARY = htmlparser
+NODE_MODULE = re-html-parser
 
 SRC_DIR = library
 HXNODEJS_DEST_DIR = hxnodejs
@@ -11,10 +11,7 @@ build:	build-hxnodejs \
 		build-node-module
 
 # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-build-hxnodejs:	$(HXNODEJS_DEST_DIR)/$(PACKAGE) \
-				$(HXNODEJS_DEST_DIR)/$(PACKAGE)/XmlAttribute.hx \
-				$(HXNODEJS_DEST_DIR)/$(PACKAGE)/XmlNode.hx \
-				$(HXNODEJS_DEST_DIR)/$(PACKAGE)/XmlNodeText.hx
+build-hxnodejs:	$(HXNODEJS_DEST_DIR)/$(PACKAGE)
 
 $(HXNODEJS_DEST_DIR)/$(PACKAGE):	$(SRC_DIR)/**
 	haxe \
@@ -27,7 +24,7 @@ $(HXNODEJS_DEST_DIR)/$(PACKAGE):	$(SRC_DIR)/**
 		--macro "CodeGen.set('applyNatives', false)" \
 		--macro "CodeGen.include('$(PACKAGE)')" \
 		--macro "CodeGen.set('includePrivate', true)" \
-		--macro "CodeGen.set('requireNodeModule', '$(LIBRARY)')" \
+		--macro "CodeGen.set('requireNodeModule', '$(NODE_MODULE)')" \
 		--macro "CodeGen.generate('haxeExtern')" \
 		--macro "include('$(PACKAGE)')"
 

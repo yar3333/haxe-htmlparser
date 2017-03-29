@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("htmlparser", "XmlBuilder") extern class XmlBuilder
+@:jsRequire("re-html-parser", "XmlBuilder") extern class XmlBuilder
 {
 	function new(?indent:String, ?newLine:String) : Void;
 	private var indent : String;

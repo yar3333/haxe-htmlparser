@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("htmlparser", "HtmlTools") extern class HtmlTools
+@:jsRequire("re-html-parser", "HtmlTools") extern class HtmlTools
 {
 	private static var htmlUnescapeMap(get, null) : Map<String, String>;
 	private static function get_htmlUnescapeMap() : Map<String, String>;

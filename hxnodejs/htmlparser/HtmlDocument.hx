@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("htmlparser", "HtmlDocument") extern class HtmlDocument extends htmlparser.HtmlNodeElement
+@:jsRequire("re-html-parser", "HtmlDocument") extern class HtmlDocument extends htmlparser.HtmlNodeElement
 {
 	function new(?str:String, ?tolerant:Bool) : Void;
 }

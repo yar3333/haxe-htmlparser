@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("htmlparser", "HtmlParserTools") extern class HtmlParserTools
+@:jsRequire("re-html-parser", "HtmlParserTools") extern class HtmlParserTools
 {
 	static function getAttr(node:htmlparser.HtmlNodeElement, attrName:String, ?defaultValue:Dynamic) : Dynamic;
 	static function getAttrString(node:htmlparser.HtmlNodeElement, attrName:String, ?defaultValue:String) : String;
