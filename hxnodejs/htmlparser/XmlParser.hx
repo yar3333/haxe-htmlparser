@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("htmlparser", "XmlParser") extern class XmlParser extends htmlparser.HtmlParser
+@:jsRequire("re-html-parser", "XmlParser") extern class XmlParser extends htmlparser.HtmlParser
 {
 	private function new() : Void;
 	private override function isSelfClosingTag(tag:String) : Bool;

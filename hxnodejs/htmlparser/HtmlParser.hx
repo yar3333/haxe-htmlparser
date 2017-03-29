@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("htmlparser", "HtmlParser") extern class HtmlParser
+@:jsRequire("re-html-parser", "HtmlParser") extern class HtmlParser
 {
 	private function new() : Void;
 	private var tolerant : Bool;

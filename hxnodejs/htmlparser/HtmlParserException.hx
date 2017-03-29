@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("htmlparser", "HtmlParserException") extern class HtmlParserException
+@:jsRequire("re-html-parser", "HtmlParserException") extern class HtmlParserException
 {
 	function new(message:String, pos:{ var column : Int; var length : Int; var line : Int; }) : Void;
 	var message : String;

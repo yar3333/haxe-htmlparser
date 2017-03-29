@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("htmlparser", "HtmlNodeText") extern class HtmlNodeText extends htmlparser.HtmlNode
+@:jsRequire("re-html-parser", "HtmlNodeText") extern class HtmlNodeText extends htmlparser.HtmlNode
 {
 	function new(text:String) : Void;
 	var text : String;
