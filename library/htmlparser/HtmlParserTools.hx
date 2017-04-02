@@ -44,7 +44,7 @@ class HtmlParserTools
 	static function parseValue(value:String, ?defaultValue:Dynamic) : Dynamic
 	{
 		if (Std.is(defaultValue, Float)) return Std.parseFloat(value);
-		if (Std.is(defaultValue, Bool)) return stdlib.Std.bool(value);
+		if (Std.is(defaultValue, Bool)) return value != null && value != "" && value != "0" && [ "false", "no" ].indexOf(value.toLowerCase()) < 0;
 		if (Std.is(defaultValue, Array))
 		{
 			var elems = [];
