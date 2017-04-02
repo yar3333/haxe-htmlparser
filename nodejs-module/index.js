@@ -259,13 +259,6 @@ Std.parseInt = function(x) {
 	}
 	return v;
 };
-Std.random = function(x) {
-	if(x <= 0) {
-		return 0;
-	} else {
-		return Math.floor(Math.random() * x);
-	}
-};
 var StringBuf = function() { };
 StringBuf.__name__ = ["StringBuf"];
 StringBuf.prototype = {
@@ -2057,7 +2050,11 @@ htmlparser_HtmlParserTools.parseValue = function(value,defaultValue) {
 		return parseFloat(value);
 	}
 	if(typeof(defaultValue) == "boolean") {
-		return stdlib_Std.bool(value);
+		if(value != null && value != "" && value != "0") {
+			return ["false","no"].indexOf(value.toLowerCase()) < 0;
+		} else {
+			return false;
+		}
 	}
 	if((defaultValue instanceof Array) && defaultValue.__enum__ == null) {
 		var elems = [];
@@ -2962,13 +2959,6 @@ js_Boot.__instanceof = function(o,cl) {
 		return o.__enum__ == cl;
 	}
 };
-js_Boot.__cast = function(o,t) {
-	if(js_Boot.__instanceof(o,t)) {
-		return o;
-	} else {
-		throw new js__$Boot_HaxeError("Cannot cast " + Std.string(o) + " to " + Std.string(t));
-	}
-};
 js_Boot.__nativeClassName = function(o) {
 	var name = js_Boot.__toStr.call(o).slice(8,-1);
 	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") {
@@ -3086,132 +3076,6 @@ js_html_compat_Uint8Array._subarray = function(start,end) {
 	var a = js_html_compat_Uint8Array._new(this.slice(start,end));
 	a.byteOffset = start;
 	return a;
-};
-var stdlib_Std = function() { };
-stdlib_Std.__name__ = ["stdlib","Std"];
-stdlib_Std.parseInt = function(x,defaultValue) {
-	if(x != null) {
-		if(new EReg("^\\s*[+-]?\\s*((?:0x[0-9a-fA-F]{1,7})|(?:\\d{1,9}))\\s*$","").match(x)) {
-			return Std.parseInt(x);
-		} else {
-			return defaultValue;
-		}
-	} else {
-		return defaultValue;
-	}
-};
-stdlib_Std.parseFloat = function(x,defaultValue) {
-	if(x == null) {
-		return defaultValue;
-	}
-	if(new EReg("^\\s*[+-]?\\s*\\d{1,20}(?:[.]\\d+)?(?:e[+-]?\\d{1,20})?\\s*$","").match(x)) {
-		var r = parseFloat(x);
-		if(!isNaN(r)) {
-			return r;
-		} else {
-			return defaultValue;
-		}
-	}
-	return defaultValue;
-};
-stdlib_Std.bool = function(v) {
-	if(v != false && v != null && v != 0 && v != "" && v != "0") {
-		if(typeof(v) == "string") {
-			if((js_Boot.__cast(v , String)).toLowerCase() != "false" && (js_Boot.__cast(v , String)).toLowerCase() != "off") {
-				return (js_Boot.__cast(v , String)).toLowerCase() != "null";
-			} else {
-				return false;
-			}
-		} else {
-			return true;
-		}
-	} else {
-		return false;
-	}
-};
-stdlib_Std.parseValue = function(x) {
-	var value = x;
-	var valueLC = value != null ? value.toLowerCase() : null;
-	var parsedValue;
-	if(valueLC == "true") {
-		value = true;
-	} else if(valueLC == "false") {
-		value = false;
-	} else if(valueLC == "null") {
-		value = null;
-	} else {
-		parsedValue = stdlib_Std.parseInt(value);
-		if(parsedValue != null) {
-			value = parsedValue;
-		} else {
-			parsedValue = stdlib_Std.parseFloat(value);
-			if(parsedValue != null) {
-				value = parsedValue;
-			}
-		}
-	}
-	return value;
-};
-stdlib_Std.hash = function(obj) {
-	var r = new haxe_ds_StringMap();
-	var _g = 0;
-	var _g1 = Reflect.fields(obj);
-	while(_g < _g1.length) {
-		var key = _g1[_g];
-		++_g;
-		var value = Reflect.field(obj,key);
-		if(__map_reserved[key] != null) {
-			r.setReserved(key,value);
-		} else {
-			r.h[key] = value;
-		}
-	}
-	return r;
-};
-stdlib_Std.min = function(a,b) {
-	if(a < b) {
-		return a;
-	} else {
-		return b;
-	}
-};
-stdlib_Std.max = function(a,b) {
-	if(a > b) {
-		return a;
-	} else {
-		return b;
-	}
-};
-stdlib_Std.abs = function(x) {
-	if(x >= 0) {
-		return x;
-	} else {
-		return -x;
-	}
-};
-stdlib_Std.sign = function(n) {
-	if(n > 0) {
-		return 1;
-	} else if(n < 0) {
-		return -1;
-	} else {
-		return 0;
-	}
-};
-stdlib_Std["is"] = function(v,t) {
-	return js_Boot.__instanceof(v,t);
-};
-stdlib_Std.instance = function(value,c) {
-	return (value instanceof c) ? value : null;
-};
-stdlib_Std.string = function(s) {
-	return Std.string(s);
-};
-stdlib_Std["int"] = function(x) {
-	return x | 0;
-};
-stdlib_Std.random = function(x) {
-	return Std.random(x);
 };
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;
