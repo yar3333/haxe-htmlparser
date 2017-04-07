@@ -358,6 +358,26 @@ class HtmlTest extends haxe.unit.TestCase
 		assertTrue(false);
 	}
 	
+	public function testBoolAttrA()
+	{
+		var doc = new HtmlDocument("<a><b disabled></b></a>");
+		var bb = doc.find(">a>b");
+		assertEquals(1, bb.length);
+		assertTrue(bb[0].hasAttribute("disabled"));
+		assertEquals(null, bb[0].getAttribute("disabled"));
+	}
+	
+	public function testBoolAttrB()
+	{
+		var doc = new HtmlDocument("<a><b disabled new-attr></b></a>");
+		var bb = doc.find(">a>b");
+		assertEquals(1, bb.length);
+		assertTrue(bb[0].hasAttribute("disabled"));
+		assertTrue(bb[0].hasAttribute("new-attr"));
+		assertEquals(null, bb[0].getAttribute("disabled"));
+		assertEquals(null, bb[0].getAttribute("new-attr"));
+	}
+	
 	/*
 	#if sys
 	public function testSpeed()

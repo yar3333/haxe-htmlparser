@@ -38,14 +38,14 @@ class HtmlParser
 	static var reScript = "[<]\\s*script\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*script\\s*>";
 	static var reStyle = "<\\s*style\\s*([^>]*)>([\\s\\S]*?)<\\s*/\\s*style\\s*>";
 	static var reElementOpen = "<\\s*(" + reNamespacedID + ")";
-	static var reAttr = reNamespacedID + "\\s*=\\s*(?:'[^']*'|\"[^\"]*\"|[-_a-z0-9]+)";
+	static var reAttr = reNamespacedID + "(?:\\s*=\\s*(?:'[^']*?'|\"[^\"]*?\"|[-_a-z0-9]+))?";
 	static var reElementEnd = "(/)?\\s*>";
 	static var reElementClose = "<\\s*/\\s*(" + reNamespacedID + ")\\s*>";
 	static var reComment = "<!--[\\s\\S]*?-->";
 	
 	static var reMain = new EReg("(" + reCDATA + ")|(" + reScript + ")|(" + reStyle + ")|(" + reElementOpen + "((?:\\s+" + reAttr +")*)\\s*" + reElementEnd + ")|(" + reElementClose + ")|(" + reComment + ")", "ig");
 	
-	static var reParseAttrs = new EReg("(" + reNamespacedID + ")\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+)" , "ig");
+	static var reParseAttrs = new EReg("(" + reNamespacedID + ")(?:\\s*=\\s*('[^']*'|\"[^\"]*\"|[-_a-z0-9]+))?" , "ig");
 	
 	var tolerant : Bool;
 	var matches : Array<HtmlLexem>;
@@ -232,16 +232,24 @@ class HtmlParser
         {
 			var name = reParseAttrs.matched(1);
 			var value = reParseAttrs.matched(2);
-			var quote = value.substr(0, 1);
-			if (quote == '"' || quote == "'")
+			
+			var quote : String = null;
+			var unescaped : String = null;
+			if (value != null)
 			{
-				value = value.substr(1, value.length - 2);
+				quote = value.substr(0, 1);
+				if (quote == '"' || quote == "'")
+				{
+					value = value.substr(1, value.length - 2);
+				}
+				else
+				{
+					quote = "";
+				}
+				unescaped = HtmlTools.unescape(value);
 			}
-			else
-			{
-				quote = "";
-			}
-			attributes.push(new HtmlAttribute(name, HtmlTools.unescape(value), quote));
+			
+			attributes.push(new HtmlAttribute(name, unescaped, quote));
 			
 			var p = reParseAttrs.matchedPos();
 			pos = p.pos + p.len;
