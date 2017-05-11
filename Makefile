@@ -1,6 +1,5 @@
 PACKAGE = htmlparser
-NODEJS_MODULE = re-html-parser
-
+NODEJS_MODULE = haxelib/HtmlParser
 SRC_DIR = library
 
 include hxnodejs.mk
