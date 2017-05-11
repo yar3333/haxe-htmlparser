@@ -30,8 +30,8 @@ export class HtmlNode
 	getNextSiblingNode() : .HtmlNode;
 	toString() : string;
 	toText() : string;
-	private hxSerialize(s:haxe.Serializer) : void;
-	private hxUnserialize(s:haxe.Unserializer) : void;
+	private hxSerialize(s:{ serialize(d:any) : void; }) : void;
+	private hxUnserialize(s:{ unserialize() : any; }) : void;
 }
 
 export class HtmlNodeElement extends htmlparser.HtmlNode
@@ -72,8 +72,8 @@ export class HtmlNodeElement extends htmlparser.HtmlNode
 	getAttributesAssoc() : Map<string, string>;
 	getAttributesObject() : any;
 	private isSelfClosing() : boolean;
-	private hxSerialize(s:haxe.Serializer) : void;
-	private hxUnserialize(s:haxe.Unserializer) : void;
+	private hxSerialize(s:{ serialize(d:any) : void; }) : void;
+	private hxUnserialize(s:{ unserialize() : any; }) : void;
 }
 
 export class HtmlDocument extends htmlparser.HtmlNodeElement
@@ -87,8 +87,8 @@ export class HtmlNodeText extends htmlparser.HtmlNode
 	text : string;
 	toString() : string;
 	toText() : string;
-	private hxSerialize(s:haxe.Serializer) : void;
-	private hxUnserialize(s:haxe.Unserializer) : void;
+	private hxSerialize(s:{ serialize(d:any) : void; }) : void;
+	private hxUnserialize(s:{ unserialize() : any; }) : void;
 }
 
 export class HtmlParser

@@ -8,6 +8,6 @@ package htmlparser;
 	function getNextSiblingNode() : htmlparser.HtmlNode;
 	function toString() : String;
 	function toText() : String;
-	private function hxSerialize(s:haxe.Serializer) : Void;
-	private function hxUnserialize(s:haxe.Unserializer) : Void;
+	private function hxSerialize(s:{ function serialize(d:Dynamic) : Void; }) : Void;
+	private function hxUnserialize(s:{ function unserialize() : Dynamic; }) : Void;
 }

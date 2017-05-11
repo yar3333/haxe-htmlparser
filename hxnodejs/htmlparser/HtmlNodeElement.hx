@@ -38,6 +38,6 @@ package htmlparser;
 	function getAttributesAssoc() : Map<String, String>;
 	function getAttributesObject() : Dynamic<String>;
 	private function isSelfClosing() : Bool;
-	private override function hxSerialize(s:haxe.Serializer) : Void;
-	private override function hxUnserialize(s:haxe.Unserializer) : Void;
+	private override function hxSerialize(s:{ function serialize(d:Dynamic) : Void; }) : Void;
+	private override function hxUnserialize(s:{ function unserialize() : Dynamic; }) : Void;
 }

@@ -6,6 +6,6 @@ package htmlparser;
 	var text : String;
 	override function toString() : String;
 	override function toText() : String;
-	private override function hxSerialize(s:haxe.Serializer) : Void;
-	private override function hxUnserialize(s:haxe.Unserializer) : Void;
+	private override function hxSerialize(s:{ function serialize(d:Dynamic) : Void; }) : Void;
+	private override function hxUnserialize(s:{ function unserialize() : Dynamic; }) : Void;
 }
