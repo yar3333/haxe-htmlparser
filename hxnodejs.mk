@@ -9,7 +9,7 @@
 #	HXFLAGS = read from *.hxproj - haxe compiler options
 ##################################################################
 
-DEST_DIR = nodejs
+DEST_DIR = hxnodejs
 
 HXFLAGS = $(shell haxelib run hant compiler-options)
 
