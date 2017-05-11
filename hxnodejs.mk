@@ -20,7 +20,7 @@ build:	nodejs-extern \
 
 ALL_SOURCES := $(shell /bin/find $(shell haxelib run hant path))
 
-.PHONY: build nodejs-extern nodejs-module
+.PHONY: build nodejs-extern nodejs-module clean
 
 .SUFFIXES:
 
@@ -67,7 +67,7 @@ $(DEST_DIR)/index.js: $(ALL_SOURCES)
 			--macro "keep('$(PACKAGE)')" \
 			--macro "keep('stdlib.Event')" \
 		--macro "include('$(PACKAGE)')"
-			
+
 $(DEST_DIR)/index.d.ts: $(ALL_SOURCES)
 	haxe \
 		-cp $(SRC_DIR) \
@@ -82,3 +82,10 @@ $(DEST_DIR)/index.d.ts: $(ALL_SOURCES)
 		--macro "CodeGen.map('$(PACKAGE)', '')" \
 		--macro "CodeGen.generate('typescriptExtern')" \
 		--macro "include('$(PACKAGE)')"
+
+##################################################################
+
+clean:
+	rm -rf $(NODEJS_EXTERN_PACK_DIR)
+	rm -f $(DEST_DIR)/index.js
+	rm -f $(DEST_DIR)/index.d.ts
