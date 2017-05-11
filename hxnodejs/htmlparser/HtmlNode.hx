@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("re-html-parser", "HtmlNode") extern class HtmlNode
+@:jsRequire("haxelib/hxnodejs-htmlparser", "HtmlNode") extern class HtmlNode
 {
 	var parent : htmlparser.HtmlNodeElement;
 	function remove() : Void;
