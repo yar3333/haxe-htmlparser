@@ -1,8 +1,5 @@
 package htmlparser;
 
-import haxe.Serializer;
-import haxe.Unserializer;
-
 class HtmlNodeText extends HtmlNode
 {
     public var text : String;
@@ -22,12 +19,12 @@ class HtmlNodeText extends HtmlNode
 		return HtmlTools.unescape(text);
     }
 	
-	override function hxSerialize(s:Serializer)
+	override function hxSerialize(s:{ function serialize(d:Dynamic) : Void; })
 	{
 		s.serialize(text);
 	}
 	
-	override function hxUnserialize(s:Unserializer) 
+	override function hxUnserialize(s:{ function unserialize() : Dynamic; })
 	{
 		text = s.unserialize();
     }

@@ -1,8 +1,5 @@
 package htmlparser;
 
-import haxe.Serializer;
-import haxe.Unserializer;
-
 #if jsprop @:build(JsProp.marked()) #end
 class HtmlNodeElement extends HtmlNode
 {
@@ -384,14 +381,14 @@ class HtmlNodeElement extends HtmlNode
 		return Reflect.hasField(HtmlParser.SELF_CLOSING_TAGS_HTML, name) || name.indexOf(":") >= 0;
 	}
 	
-	override function hxSerialize(s:Serializer)
+	override function hxSerialize(s:{ function serialize(d:Dynamic) : Void; })
 	{
 		s.serialize(name);
 		s.serialize(attributes);
 		s.serialize(nodes);
 	}
 	
-	override function hxUnserialize(s:Unserializer) 
+	override function hxUnserialize(s:{ function unserialize() : Dynamic; }) 
 	{
 		name = s.unserialize();
 		attributes = s.unserialize();

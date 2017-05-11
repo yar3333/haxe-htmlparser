@@ -1,8 +1,5 @@
 package htmlparser;
 
-import haxe.Serializer;
-import haxe.Unserializer;
-
 class HtmlNode
 {
     public var parent : HtmlNodeElement;
@@ -42,11 +39,11 @@ class HtmlNode
 		return '';
 	}
 	
-	function hxSerialize(s:Serializer)
+	function hxSerialize(s:{ function serialize(d:Dynamic) : Void; })
 	{
 	}
 	
-	function hxUnserialize(s:Unserializer ) 
+	function hxUnserialize(s:{ function unserialize() : Dynamic; }) 
 	{
     }
 }
