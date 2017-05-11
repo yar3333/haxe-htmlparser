@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("re-html-parser", "CssSelector") extern class CssSelector
+@:jsRequire("haxelib/hxnodejs-htmlparser", "CssSelector") extern class CssSelector
 {
 	private function new(type:String) : Void;
 	var type(default, null) : String;

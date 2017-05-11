@@ -1,6 +1,6 @@
 package htmlparser;
 
-@:jsRequire("re-html-parser", "HtmlParser") extern class HtmlParser
+@:jsRequire("haxelib/hxnodejs-htmlparser", "HtmlParser") extern class HtmlParser
 {
 	private function new() : Void;
 	private var tolerant : Bool;
