@@ -9,8 +9,8 @@ export class CssSelector
 	private static reID : string;
 	private static reNamespacedID : string;
 	private static reSelector : string;
-	static parse(selector:string) : .CssSelector[][];
-	private static parseInner(selector:string) : .CssSelector[];
+	static parse(selector:string) : CssSelector[][];
+	private static parseInner(selector:string) : CssSelector[];
 }
 
 export class HtmlAttribute
@@ -24,10 +24,10 @@ export class HtmlAttribute
 
 export class HtmlNode
 {
-	parent : .HtmlNodeElement;
+	parent : HtmlNodeElement;
 	remove() : void;
-	getPrevSiblingNode() : .HtmlNode;
-	getNextSiblingNode() : .HtmlNode;
+	getPrevSiblingNode() : HtmlNode;
+	getNextSiblingNode() : HtmlNode;
 	toString() : string;
 	toText() : string;
 	private hxSerialize(s:{ serialize(d:any) : void; }) : void;
@@ -36,15 +36,15 @@ export class HtmlNode
 
 export class HtmlNodeElement extends htmlparser.HtmlNode
 {
-	constructor(name:string, attributes:.HtmlAttribute[]);
+	constructor(name:string, attributes:HtmlAttribute[]);
 	name : string;
-	attributes : .HtmlAttribute[];
-	nodes : .HtmlNode[];
-	children : .HtmlNodeElement[];
-	getPrevSiblingElement() : .HtmlNodeElement;
-	getNextSiblingElement() : .HtmlNodeElement;
-	addChild(node:.HtmlNode, beforeNode?:.HtmlNode) : void;
-	addChildren(nodesToAdd:.HtmlNode[], beforeNode?:.HtmlNode) : void;
+	attributes : HtmlAttribute[];
+	nodes : HtmlNode[];
+	children : HtmlNodeElement[];
+	getPrevSiblingElement() : HtmlNodeElement;
+	getNextSiblingElement() : HtmlNodeElement;
+	addChild(node:HtmlNode, beforeNode?:HtmlNode) : void;
+	addChildren(nodesToAdd:HtmlNode[], beforeNode?:HtmlNode) : void;
 	toString() : string;
 	getAttribute(name:string) : string;
 	setAttribute(name:string, value:string) : void;
@@ -63,12 +63,12 @@ export class HtmlNodeElement extends htmlparser.HtmlNode
 	 */
 	fastSetInnerHTML(html:string) : void;
 	toText() : string;
-	find(selector:string) : .HtmlNodeElement[];
-	private findInner(selectors:.CssSelector[]) : .HtmlNodeElement[];
-	private isSelectorTrue(selector:.CssSelector) : boolean;
-	replaceChild(node:.HtmlNodeElement, newNode:.HtmlNode) : void;
-	replaceChildWithInner(node:.HtmlNodeElement, nodeContainer:.HtmlNodeElement) : void;
-	removeChild(node:.HtmlNode) : void;
+	find(selector:string) : HtmlNodeElement[];
+	private findInner(selectors:CssSelector[]) : HtmlNodeElement[];
+	private isSelectorTrue(selector:CssSelector) : boolean;
+	replaceChild(node:HtmlNodeElement, newNode:HtmlNode) : void;
+	replaceChildWithInner(node:HtmlNodeElement, nodeContainer:HtmlNodeElement) : void;
+	removeChild(node:HtmlNode) : void;
 	getAttributesAssoc() : Map<string, string>;
 	getAttributesObject() : any;
 	private isSelfClosing() : boolean;
@@ -98,11 +98,11 @@ export class HtmlParser
 	private matches : HtmlLexem[];
 	private str : string;
 	private i : number;
-	parse(str:string, tolerant?:boolean) : .HtmlNode[];
-	private processMatches(openedTagsLC:string[]) : { closeTagLC : string; nodes : .HtmlNode[]; };
-	private parseElement(openedTagsLC:string[]) : { closeTagLC : string; element : .HtmlNodeElement; };
+	parse(str:string, tolerant?:boolean) : HtmlNode[];
+	private processMatches(openedTagsLC:string[]) : { closeTagLC : string; nodes : HtmlNode[]; };
+	private parseElement(openedTagsLC:string[]) : { closeTagLC : string; element : HtmlNodeElement; };
 	private isSelfClosingTag(tag:string) : boolean;
-	private newElement(name:string, attributes:.HtmlAttribute[]) : .HtmlNodeElement;
+	private newElement(name:string, attributes:HtmlAttribute[]) : HtmlNodeElement;
 	private getPosition(matchIndex:number) : { column : number; length : number; line : number; };
 	static SELF_CLOSING_TAGS_HTML : any;
 	private static reID : string;
@@ -117,8 +117,8 @@ export class HtmlParser
 	private static reComment : string;
 	private static reMain : EReg;
 	private static reParseAttrs : EReg;
-	static run(str:string, tolerant?:boolean) : .HtmlNode[];
-	private static parseAttrs(str:string) : .HtmlAttribute[];
+	static run(str:string, tolerant?:boolean) : HtmlNode[];
+	private static parseAttrs(str:string) : HtmlAttribute[];
 }
 
 export class HtmlParserException
@@ -133,12 +133,12 @@ export class HtmlParserException
 
 export class HtmlParserTools
 {
-	static getAttr(node:.HtmlNodeElement, attrName:string, defaultValue?:any) : any;
-	static getAttrString(node:.HtmlNodeElement, attrName:string, defaultValue?:string) : string;
-	static getAttrInt(node:.HtmlNodeElement, attrName:string, defaultValue?:number) : number;
-	static getAttrFloat(node:.HtmlNodeElement, attrName:string, defaultValue?:number) : number;
-	static getAttrBool(node:.HtmlNodeElement, attrName:string, defaultValue?:boolean) : boolean;
-	static findOne(node:.HtmlNodeElement, selector:string) : .HtmlNodeElement;
+	static getAttr(node:HtmlNodeElement, attrName:string, defaultValue?:any) : any;
+	static getAttrString(node:HtmlNodeElement, attrName:string, defaultValue?:string) : string;
+	static getAttrInt(node:HtmlNodeElement, attrName:string, defaultValue?:number) : number;
+	static getAttrFloat(node:HtmlNodeElement, attrName:string, defaultValue?:number) : number;
+	static getAttrBool(node:HtmlNodeElement, attrName:string, defaultValue?:boolean) : boolean;
+	static findOne(node:HtmlNodeElement, selector:string) : HtmlNodeElement;
 	private static parseValue(value:string, defaultValue?:any) : any;
 }
 
@@ -150,26 +150,26 @@ export class HtmlTools
 	static unescape(text:string) : string;
 }
 
-type XmlAttribute = .HtmlAttribute;
+type XmlAttribute = HtmlAttribute;
 
 export class XmlBuilder
 {
 	constructor(indent?:string, newLine?:string);
 	private indent : string;
 	private newLine : string;
-	private cur : .XmlNodeElement;
+	private cur : XmlNodeElement;
 	private level : number;
-	xml : .XmlDocument;
-	begin(tag:string, attrs?:{ value : any; name : string; }[]) : .XmlBuilder;
-	end() : .XmlBuilder;
-	attr(name:string, value:any, defValue?:any) : .XmlBuilder;
-	content(s:string) : .XmlBuilder;
+	xml : XmlDocument;
+	begin(tag:string, attrs?:{ value : any; name : string; }[]) : XmlBuilder;
+	end() : XmlBuilder;
+	attr(name:string, value:any, defValue?:any) : XmlBuilder;
+	content(s:string) : XmlBuilder;
 	toString() : string;
 }
 
 export class XmlNodeElement extends htmlparser.HtmlNodeElement
 {
-	constructor(name:string, attributes:.HtmlAttribute[]);
+	constructor(name:string, attributes:HtmlAttribute[]);
 	private isSelfClosing() : boolean;
 	private set_innerHTML(value:string) : string;
 }
@@ -179,14 +179,14 @@ export class XmlDocument extends htmlparser.XmlNodeElement
 	constructor(str?:string);
 }
 
-type XmlNode = .HtmlNode;
+type XmlNode = HtmlNode;
 
-type XmlNodeText = .HtmlNodeText;
+type XmlNodeText = HtmlNodeText;
 
 export class XmlParser extends htmlparser.HtmlParser
 {
 	private constructor();
 	private isSelfClosingTag(tag:string) : boolean;
-	private newElement(name:string, attributes:.HtmlAttribute[]) : .XmlNodeElement;
-	static run(str:string) : .HtmlNode[];
+	private newElement(name:string, attributes:HtmlAttribute[]) : XmlNodeElement;
+	static run(str:string) : HtmlNode[];
 }
