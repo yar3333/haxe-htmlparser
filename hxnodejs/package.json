@@ -1,16 +1,11 @@
 {
-  "name": "re-html-parser",
-  "version": "3.2.3",
-  "description": "Simple and fast HTML/XML parser with a jQuery-like find() method. Also, contains a helper class to XML creating.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "html",
-    "parser",
-    "parsing"
-  ],
-  "author": "yar3333",
-  "license": "ISC"
+  "name": "hxnodejs-htmlparser",
+  "license": "MIT",
+  "tags": null,
+  "description": "Simple and fast crossplatform HTML/XML parser with a jQuery-like find() method. Also, contains a helper class to XML creating.",
+  "contributors": null,
+  "releasenote": null,
+  "version": "3.3.0",
+  "url": null,
+  "dependencies": null
 }
