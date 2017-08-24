@@ -1,0 +1,17 @@
+{
+  "name": "re-htmlparser",
+  "version": "1.0.0",
+  "description": "Fast regex-based HTML/XML parser.",
+  "main": "index.js",
+  "keywords": [
+    "web",
+    "framework",
+    "component",
+    "components"
+  ],
+  "scripts": {
+	"build": "haxelib run nodegen htmlparser re-htmlparser -hx ../../hxnodejs-re-htmlparser/library -js index.js -ts index.d.ts --raw-haxe-module file:raw-haxe-modules.list -- -lib htmlparser"
+  },
+  "author": "yar3333",
+  "license": "MIT"
+}
