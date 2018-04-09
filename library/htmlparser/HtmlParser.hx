@@ -4,29 +4,6 @@ package htmlparser;
 import unicode.EReg;
 #end
 
-private typedef HtmlLexem =
-{
-	var all : String;
-	var allPos : Int;
-	
-	var script : String;
-	var scriptAttrs : String;
-	var scriptText : String;
-	var style : String;
-	var styleAttrs : String;
-	var styleText : String;
-	var elem : String;
-	var tagOpen : String;
-	var attrs : String;
-	var tagEnd : String;
-	var close : String;
-	var tagClose : String;
-	var comment : String;
-	
-	var tagOpenLC : String;
-	var tagCloseLC : String;
-}
-
 class HtmlParser
 {
     public static var SELF_CLOSING_TAGS_HTML(default, null) : Dynamic = { img:1, br:1, input:1, meta:1, link:1, hr:1, base:1, embed:1, spacer:1, source:1, param:1 };
