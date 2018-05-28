@@ -4,8 +4,8 @@
   "tags": ["cross","html","xml","parser"],
   "description": "Simple and fast crossplatform HTML/XML parser with a jQuery-like find() method. Also, contains a helper class to XML creating.",
   "contributors": ["yar3333"],
-  "releasenote": "Add `addChildren()`.<br>\nAdd nodejs support.<br>\nAvoid `stdlib` dependency.<br>\nAdd boolean attributes support (thanks to @mrerikmedk (Michael Florentin)).<br>\nAvoid links to Serializer / Unserializer.",
-  "version": "3.3.0",
+  "releasenote": "* Extract HtmlLexem to separate file due to nodejs module generation.",
+  "version": "3.3.1",
   "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
   "dependencies": {}
 }
