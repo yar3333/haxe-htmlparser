@@ -15,7 +15,7 @@ class HtmlNode
         var siblings = this.parent.nodes;
         var n = Lambda.indexOf(siblings, this);
         if (n <= 0) return null;
-        if (n > 0) return siblings[n-1];
+        if (n > 0) return siblings[n - 1];
         return null;
     }
     
@@ -24,8 +24,8 @@ class HtmlNode
         if (parent == null) return null;
         var siblings = parent.nodes;
         var n = Lambda.indexOf(siblings, this);
-        if (n <= 0) return null;
-        if (n+1 < siblings.length) return siblings[n+1];
+        if (n < 0) return null;
+        if (n + 1 < siblings.length) return siblings[n + 1];
         return null;
     }
 
