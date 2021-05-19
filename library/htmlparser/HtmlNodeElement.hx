@@ -41,7 +41,7 @@ class HtmlNodeElement extends HtmlNode
 		if (beforeNode == null)
         {
             nodes.push(node);
-            if (Std.is(node, HtmlNodeElement))
+            if (Std.isOfType(node, HtmlNodeElement))
             {
                 children.push(cast node);
             }
@@ -52,7 +52,7 @@ class HtmlNodeElement extends HtmlNode
             if (n >= 0)
             {
                 nodes.insert(n, node);
-                if (Std.is(node, HtmlNodeElement))
+                if (Std.isOfType(node, HtmlNodeElement))
                 {
                     n = children.indexOf(cast beforeNode);
                     if (n >= 0)
@@ -78,7 +78,7 @@ class HtmlNodeElement extends HtmlNode
             if (n >= 0)
             {
                 nodes = nodes.slice(0, n).concat(nodesToAdd).concat(nodes.slice(n));
-                var elems = nodesToAdd.filter(function(e) return Std.is(e, HtmlNodeElement)).map(function(e) return (cast e:HtmlNodeElement));
+                var elems = nodesToAdd.filter(function(e) return Std.isOfType(e, HtmlNodeElement)).map(function(e) return (cast e:HtmlNodeElement));
                 if (elems.length > 0)
                 {
                     n = children.indexOf(cast beforeNode);
@@ -313,7 +313,7 @@ class HtmlNodeElement extends HtmlNode
 		nodes[n] = newNode;
 		
 		var n = children.indexOf(node);
-		if (Std.is(newNode, HtmlNodeElement))
+		if (Std.isOfType(newNode, HtmlNodeElement))
 		{
 			children[n] = cast newNode;
 		}
@@ -345,7 +345,7 @@ class HtmlNodeElement extends HtmlNode
         if (n >= 0) 
         {
             nodes.splice(n, 1);
-			if (Std.is(node, HtmlNodeElement))
+			if (Std.isOfType(node, HtmlNodeElement))
 			{
 				n = children.indexOf(cast node);
 				if (n >= 0 )
