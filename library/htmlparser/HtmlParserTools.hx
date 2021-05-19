@@ -6,7 +6,7 @@ class HtmlParserTools
 	{
 		if (node == null || !node.hasAttribute(attrName))
 		{
-			return Std.is(defaultValue, Array) ? null : defaultValue;
+			return Std.isOfType(defaultValue, Array) ? null : defaultValue;
 		}
 		return parseValue(node.getAttribute(attrName), defaultValue);
 	}
@@ -43,9 +43,9 @@ class HtmlParserTools
 	
 	static function parseValue(value:String, ?defaultValue:Dynamic) : Dynamic
 	{
-		if (Std.is(defaultValue, Float)) return Std.parseFloat(value);
-		if (Std.is(defaultValue, Bool)) return value != null && value != "" && value != "0" && [ "false", "no" ].indexOf(value.toLowerCase()) < 0;
-		if (Std.is(defaultValue, Array))
+		if (Std.isOfType(defaultValue, Float)) return Std.parseFloat(value);
+		if (Std.isOfType(defaultValue, Bool)) return value != null && value != "" && value != "0" && [ "false", "no" ].indexOf(value.toLowerCase()) < 0;
+		if (Std.isOfType(defaultValue, Array))
 		{
 			var elems = [];
 			var parCounter = 0;

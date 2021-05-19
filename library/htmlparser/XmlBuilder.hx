@@ -39,7 +39,7 @@ class XmlBuilder
 		if (indent != null)
 		{
 			level--;
-			if (cur.nodes.exists(function(e) return !Std.is(e, HtmlNodeText)))
+			if (cur.nodes.exists(function(e) return !Std.isOfType(e, HtmlNodeText)))
 			{
 				cur.addChild(new XmlNodeText(newLine + StringTools.rpad("", indent, level * indent.length)));
 			}
@@ -51,9 +51,9 @@ class XmlBuilder
 	
 	public function attr(name:String, value:Dynamic, ?defValue:Dynamic) : XmlBuilder
 	{
-		if (value != null && (!Std.is(value, Float) || !Math.isNaN(value)) && value != defValue)
+		if (value != null && (!Std.isOfType(value, Float) || !Math.isNaN(value)) && value != defValue)
 		{
-			if (Std.is(value, Array)) value = value.join(",");
+			if (Std.isOfType(value, Array)) value = value.join(",");
 			cur.setAttribute(name, Std.string(value));
 		}
 		return this;
