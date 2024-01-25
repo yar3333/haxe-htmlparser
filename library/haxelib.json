@@ -6,6 +6,6 @@
   "contributors": ["yar3333"],
   "releasenote": "Bugfix in getNextSiblingNode().",
   "version": "3.3.2",
-  "url": "https://bitbucket.org/yar3333/haxe-htmlparser",
+  "url": "https://github.com/yar3333/haxe-htmlparser",
   "dependencies": {}
 }
