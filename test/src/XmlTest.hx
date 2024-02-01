@@ -1,17 +1,13 @@
-package;
-
 import haxe.Serializer;
 import haxe.Unserializer;
-import htmlparser.XmlParser;
-import htmlparser.HtmlNodeElement;
-import htmlparser.HtmlNodeText;
 import htmlparser.XmlDocument;
+import utest.Assert;
 
 #if sys
 import sys.io.File;
 #end
 
-class XmlTest extends haxe.unit.TestCase
+class XmlTest extends utest.Test
 {
 	public function testGoodXml()
 	{
@@ -21,19 +17,18 @@ class XmlTest extends haxe.unit.TestCase
 		}
 		catch (_:Dynamic)
 		{
-			assertTrue(false);
+			Assert.isTrue(false);
 			return;
 		}
-		assertTrue(true);
+		Assert.isTrue(true);
 	}
     
 	#if sys
 	public function testComplexParse()
     {
-		var s = File.getContent("inputA.xml");
+		var s = File.getContent("assets/inputA.xml");
 		var doc = new XmlDocument(s);
-		File.saveContent("outputA.xml", doc.toString());
-		assertEquals(s, File.getContent("outputA.xml"));
+		Assert.equals(s, doc.toString());
     }
 	#else
 	public function testComplexParse()
@@ -198,7 +193,7 @@ class XmlTest extends haxe.unit.TestCase
 	</layer>
 </movieclip>';
 		var doc = new XmlDocument(s);
-		assertEquals(s, doc.toString());
+		Assert.equals(s, doc.toString());
     }
 	
 	#end
@@ -208,7 +203,7 @@ class XmlTest extends haxe.unit.TestCase
 		var text = "<root>text1<link>text2</link>text3</root>";
 		
 		var doc = new XmlDocument(text);
-		assertEquals(text, doc.innerHTML);
+		Assert.equals(text, doc.innerHTML);
 		
 		#if (js && jsprop)
 			// innerHTML is native js property, so we not need to specify type for doc2	
@@ -217,7 +212,7 @@ class XmlTest extends haxe.unit.TestCase
 			// innerHTML is a haxe property, so we need to specify type to correct call get_innerHTML() in code below
 			var doc2 : XmlDocument = Unserializer.run(Serializer.run(doc));
 		#end
-		assertEquals(text, doc2.innerHTML);
+		Assert.equals(text, doc2.innerHTML);
 	}
 	
 	public function testInnerText()
@@ -225,7 +220,7 @@ class XmlTest extends haxe.unit.TestCase
 		var text = "<root>text1<link>text2&amp;</link>te<![CDATA[4&amp;10]]>xt3</root>";
 		
 		var doc = new XmlDocument(text);
-		assertEquals("text1text2&te4&amp;10xt3", doc.innerText);
+		Assert.equals("text1text2&te4&amp;10xt3", doc.innerText);
 	}
 	
 	public function testComplexAttr()
@@ -233,7 +228,7 @@ class XmlTest extends haxe.unit.TestCase
 		var text = "<root xlink:href='abc' />";
 		
 		var doc = new XmlDocument(text);
-		assertEquals("abc", doc.children[0].getAttribute("xlink:href"));
+		Assert.equals("abc", doc.children[0].getAttribute("xlink:href"));
 	}
 	
 	public function testGetEscapedAttr()
@@ -241,7 +236,7 @@ class XmlTest extends haxe.unit.TestCase
 		var text = "<a href='abc&amp;def' />";
 		
 		var doc = new XmlDocument(text);
-		assertEquals("abc&def", doc.children[0].getAttribute("href"));
+		Assert.equals("abc&def", doc.children[0].getAttribute("href"));
 	}
 	
 	public function testSetEscapedAttr()
@@ -250,6 +245,6 @@ class XmlTest extends haxe.unit.TestCase
 		
 		var doc = new XmlDocument(text);
 		doc.children[0].setAttribute("href", "abc&def");
-		assertEquals("<a href=\"abc&amp;def\" />", doc.toString());
+		Assert.equals("<a href=\"abc&amp;def\" />", doc.toString());
 	}
 }

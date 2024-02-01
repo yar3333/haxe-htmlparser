@@ -1,2 +1,4 @@
 library/library.zip
-tests/bin
+test/bin/*.js
+test/bin/*.n
+test/bin/php

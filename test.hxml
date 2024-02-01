@@ -1,0 +1,21 @@
+--library utest
+--class-path library
+--class-path test\src
+--main Main
+
+--each
+--js dummy.js
+--no-output
+--macro include("htmlparser")
+
+--next
+--js test\bin\index.js
+
+--next
+--neko test\bin\index.n
+--cmd cmd /c "cd test\bin & neko index.n"
+
+# last haxe-4 version produce memory overflow in EReg, so test on php is disabled
+#--next
+#--php test\bin\php
+#--cmd cmd /c "cd test\bin & php php\index.php"
