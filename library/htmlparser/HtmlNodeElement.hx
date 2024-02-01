@@ -36,59 +36,29 @@ class HtmlNodeElement extends HtmlNode
 
     public function addChild(node:HtmlNode, beforeNode:HtmlNode=null) : Void
     {
-        node.parent = this;
-        
 		if (beforeNode == null)
         {
             nodes.push(node);
-            if (Std.isOfType(node, HtmlNodeElement))
-            {
-                children.push(cast node);
-            }
+            node.parent = this;
+            if (Std.isOfType(node, HtmlNodeElement)) children.push((cast node : HtmlNodeElement));
         }
         else
         {
             var n = nodes.indexOf(beforeNode);
-            if (n >= 0)
-            {
-                nodes.insert(n, node);
-                if (Std.isOfType(node, HtmlNodeElement))
-                {
-                    n = children.indexOf(cast beforeNode);
-                    if (n >= 0)
-                    {
-                        children.insert(n, cast node);
-                    }
-                }
-            }
+            if (n < 0) throw new haxe.Exception("`beforeNode` is not found.");
+            nodes.insert(n, node);
+            node.parent = this;
+            children = cast nodes.filter(x -> Std.isOfType(x, HtmlNodeElement));
         }
     }
     
 	public function addChildren(nodesToAdd:Array<HtmlNode>, beforeNode:HtmlNode=null) : Void
 	{
+        var n = beforeNode != null ? nodes.indexOf(beforeNode) : 0;
+        if (n < 0) throw new haxe.Exception("`beforeNode` is not found.");
+        nodes = (n > 0 ? nodes.slice(0, n) : []).concat(nodesToAdd).concat(nodes.slice(n));
 		for (node in nodesToAdd) node.parent = this;
-		
-		if (beforeNode == null)
-        {
-			for (node in nodesToAdd) addChild(node);
-        }
-        else
-        {
-            var n = nodes.indexOf(beforeNode);
-            if (n >= 0)
-            {
-                nodes = nodes.slice(0, n).concat(nodesToAdd).concat(nodes.slice(n));
-                var elems = nodesToAdd.filter(function(e) return Std.isOfType(e, HtmlNodeElement)).map(function(e) return (cast e:HtmlNodeElement));
-                if (elems.length > 0)
-                {
-                    n = children.indexOf(cast beforeNode);
-                    if (n >= 0)
-                    {
-						children = children.slice(0, n).concat(elems).concat(children.slice(n));
-					}
-				}
-			}
-		}
+        children = cast nodes.filter(x -> Std.isOfType(x, HtmlNodeElement));
 	}    
 	
 	public override function toString() : String
@@ -305,54 +275,47 @@ class HtmlNodeElement extends HtmlNode
 		return true;
     }
     
-    public function replaceChild(node:HtmlNodeElement, newNode:HtmlNode)
+    public function replaceChild(node:HtmlNode, newNode:haxe.extern.EitherType<HtmlNode, Array<HtmlNode>>)
     {
-		newNode.parent = this;
-		
-		var n = nodes.indexOf(node);
-		nodes[n] = newNode;
-		
-		var n = children.indexOf(node);
-		if (Std.isOfType(newNode, HtmlNodeElement))
-		{
-			children[n] = cast newNode;
-		}
-		else
-		{
-			children.splice(n, 1);
-		}
+        if (Std.isOfType(newNode, Array)) replaceChildByMany(node, newNode);
+        else                              replaceChildByOne(node, newNode);
     }
     
-    public function replaceChildWithInner(node:HtmlNodeElement,  nodeContainer:HtmlNodeElement)
+    function replaceChildByOne(node:HtmlNode, newNode:HtmlNode)
     {
-        for (n in nodeContainer.nodes)
-		{
-			n.parent = this;
-		}
-        
+		var n = nodes.indexOf(node);
+        if (n < 0) throw new haxe.Exception("Node to replace is not found.");
+        nodes[n].parent = null;
+		nodes[n] = newNode;
+		newNode.parent = this;
+        children = cast nodes.filter(x -> Std.isOfType(x, HtmlNodeElement));
+    }
+    
+    function replaceChildByMany(node:HtmlNode, newNodes:Array<HtmlNode>)
+    {
         var n = nodes.indexOf(node);
+        if (n < 0) throw new haxe.Exception("Node to replace is not found.");
+        nodes[n].parent = null;
 		var lastNodes = nodes.slice(n + 1, nodes.length);
-		nodes = (n != 0 ? nodes.slice(0, n) : []).concat(nodeContainer.nodes).concat(lastNodes);
-        
-        var n = children.indexOf(node);
-		var lastChildren = children.slice(n + 1, children.length);
-		children = (n != 0 ? children.slice(0, n) : []).concat(nodeContainer.children).concat(lastChildren);
+        nodes = (n > 0 ? nodes.slice(0, n) : []).concat(newNodes).concat(lastNodes);
+        for (n in newNodes) n.parent = this;
+        children = cast nodes.filter(x -> Std.isOfType(x, HtmlNodeElement));
     }
 	
 	public function removeChild(node:HtmlNode)
     {
         var n = nodes.indexOf(node);
-        if (n >= 0) 
+        if (n < 0) throw new haxe.Exception("Node to remove is not found.");
+        nodes.splice(n, 1);
+        node.parent = null;
+        
+        if (Std.isOfType(node, HtmlNodeElement))
         {
-            nodes.splice(n, 1);
-			if (Std.isOfType(node, HtmlNodeElement))
-			{
-				n = children.indexOf(cast node);
-				if (n >= 0 )
-				{
-					children.splice(n, 1);
-				}
-			}
+            n = children.indexOf(cast node);
+            if (n >= 0 )
+            {
+                children.splice(n, 1);
+            }
         }
     }
 	
